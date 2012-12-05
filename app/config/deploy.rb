@@ -2,12 +2,13 @@ set :application, "Yuno"
 set :domain,      "s2-marketing.net"
 set :deploy_to,   "/home/s2market/yuno"
 set :app_path,    "app"
+default_run_options[:pty] = true
 
 set :use_sudo,    false
 set :user,        "s2market"
 set :server_user, "apache"
 
-set :repository,  "git@github.com:Briareos/Yuno.git"
+set :repository,  "git://github.com/Briareos/Yuno.git"
 set :scm,         :git
 set :scm_verbose, true
 
