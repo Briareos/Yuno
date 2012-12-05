@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping http://symfony.com/schema/dic/constraint-mapping/constraint-mapping-1.0.xsd">
+
+    <class name="Yuno\MainBundle\Entity\User">
+        <property name="username">
+            <constraint name="NotBlank"/>
+        </property>
+    </class>
+    <class name="Yuno\MainBundle\Entity\Site">
+        <property name="name">
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="url">
+            <constraint name="NotBlank"/>
+            <constraint name="Url"/>
+        </property>
+        <property name="user">
+            <constraint name="NotBLank"/>
+        </property>
+    </class>
+    <class name="Yuno\MainBundle\Entity\IpBan">
+        <getter property="onlyOneIpPresent">
+            <constraint name="True">
+                <option name="message">Only an IPv4 or an IPv6 address can be entered.</option>
+            </constraint>
+        </getter>
+        <property name="subnet">
+            <constraint name="Range">
+                <option name="min">8</option>
+                <option name="max">32</option>
+            </constraint>
+        </property>
+        <property name="ipv4">
+            <constraint name="Ip">
+                <option name="version">4</option>
+            </constraint>
+        </property>
+        <property name="ipv6">
+            <constraint name="Ip">
+                <option name="version">6</option>
+            </constraint>
+        </property>
+    </class>
+    <class name="Yuno\MainBundle\Entity\Banner">
+        <property name="size">
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="code">
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="humanUrl">
+            <constraint name="NotBlank"/>
+            <constraint name="Url"/>
+        </property>
+        <property name="botUrl">
+            <constraint name="NotBlank"/>
+            <constraint name="Url"/>
+        </property>
+    </class>
+    <class name="Yuno\MainBundle\Entity\Campaign">
+        <property name="name">
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="campaignGroups">
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="user">
+            <constraint name="NotBlank"/>
+        </property>
+        <property name="timezone">
+            <constraint name="NotBlank"/>
+        </property>
+    </class>
+</constraint-mapping>

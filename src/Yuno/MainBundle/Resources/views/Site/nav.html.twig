@@ -1,0 +1,6 @@
+{% if is_granted('EDIT', entity) %}
+<ul class="nav nav-tabs">
+    <li class="{{ route == 'site_show' ? 'active' }}"><a href="{{ path('site_show', { 'id': entity.id }) }}">Info</a></li>
+    <li class="{{ route in ['site_loopback_search','site_loopback_return'] ? 'active' }}"><a href="{{ path('site_loopback_search', { 'id': entity.id }) }}">Loopback test</a></li>
+</ul>
+{% endif %}

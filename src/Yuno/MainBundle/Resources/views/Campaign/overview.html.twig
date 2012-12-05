@@ -1,0 +1,86 @@
+{% extends '::standard_layout.html.twig' %}
+{% from 'MainBundle::macros.html.twig' import clippy %}
+
+{% block title %}Campaign <em>{{ entity }}</em> overview{% endblock %}
+
+{% block content %}
+    {% include 'MainBundle:Campaign:nav.html.twig' %}
+
+    <p>
+        The counter resets in <strong class="tooltip-me" data-title="{{ entity.getNextMidnight()|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.getNextMidnight()|dateage }}</strong>, at midnight in accordance to campaign's timezone (<em>{{ entity.timezone }}</em>).
+    </p>
+    <form action="{{ path('campaign_overview', { 'id': entity.id }) }}" method="post" {{ form_enctype(form) }}>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Banner group</th>
+                <th>Banner site</th>
+                <th colspan="2">Click dispersion</th>
+                <th>Click counter</th>
+                <th>Daily click quota</th>
+                <th colspan="2">Click counter</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if campaign_groups|length %}
+                {% for campaign_group in campaign_groups %}
+                    {% if campaign_group.banners|length %}
+                        {% for banner in campaign_group.banners %}
+                            <tr class="{{ group_click_count[campaign_group.bannerGroup.id] is defined and group_click_count[campaign_group.bannerGroup.id].green >= campaign_group.clickLimit ? 'success' }}">
+                                {% if loop.first %}
+                                    {% set clippy_id = 'clippy-'~campaign_group.id %}
+                                    <td rowspan="{{ loop.length }}"><span class="label label-inverse">{{ campaign_group.getBannerGroup() }}</span> <span data-mouseover="Copy campaign group URL code to clipboard" data-click="Copied!" id="{{ clippy_id }}">{{ clippy(campaign_group_urls[campaign_group.id], clippy_id) }}</span></td>
+                                {% endif %}
+                                <td class="{{ not banner.site.active ? 'error' }}"><span class="label label-success">{{ banner.site }}</span></td>
+                                <td class="{{ not banner.site.active ? 'error' }}"><input value="{{ form.campaignGroups[campaign_group.id].clickDispersion[banner.id].vars.value }}" {% if form.campaignGroups[campaign_group.id].clickDispersion[banner.id].vars.disabled %}disabled="disabled" {% endif %} data-group="{{ campaign_group.getBannerGroup().getId() }}" id="range-{{ banner.id }}" data-value="#{{ form.campaignGroups[campaign_group.id].clickDispersion[banner.id].vars.id }}" type="range"
+                                                                                          min="0" max="100"></td>
+                                <td class="{{ not banner.site.active ? 'error' }}">
+                                    {{ form_widget(form.campaignGroups[campaign_group.id].clickDispersion[banner.id]) }}
+                                </td>
+                                <td class="{{ not banner.site.active ? 'error' }}">
+                                    <label class="badge badge-info">
+                                        {% if banner_click_count[banner.id] is defined %}
+                                            {{ banner_click_count[banner.id] }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    </label>
+                                </td>
+                                {% if loop.first %}
+                                    <td rowspan="{{ loop.length }}">{{ form_widget(form.campaignGroups[campaign_group.id].clickLimit) }}</td>
+                                    <td rowspan="{{ loop.length }}"><span class="badge badge-important">{{ group_click_count[campaign_group.bannerGroup.id] is defined ? group_click_count[campaign_group.bannerGroup.id].red : 0 }}</span></td>
+                                    <td rowspan="{{ loop.length }}"><span class="badge badge-info">
+                                        {{ group_click_count[campaign_group.bannerGroup.id] is defined ? group_click_count[campaign_group.bannerGroup.id].green : 0 }}
+                                        /
+                                        {{ campaign_group.clickLimit }}
+                                    </span></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr class="error">
+                            <td><span class="label label-inverse">{{ campaign_group.getBannerGroup() }}</span></td>
+                            <td colspan="4">
+                                <em>There are no banners for this group.</em>
+                                {# This is empty, but we should render it, so its labels don't get rendered in form_rest() #}
+                                {{ form_widget(form.campaignGroups[campaign_group.id].clickDispersion) }}
+                            </td>
+                            <td colspan="3">{{ form_widget(form.campaignGroups[campaign_group.id].clickLimit) }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <em>There are no active banner groups for this campaign.</em>
+            {% endif %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="8">
+                    {{ form_rest(form) }}
+                    <button class="btn btn-primary" type="submit">Save changes</button>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+{% endblock %}

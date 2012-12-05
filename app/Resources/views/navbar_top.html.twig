@@ -1,0 +1,78 @@
+<div class="navbar navbar-fixed-top navbar-inverse">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="brand" href="{{ path('dashboard') }}">Project Yuno</a>
+            <ul class="nav">
+                <li class="{{ route == 'dashboard' ? 'active' }}"><a href="{{ path('dashboard') }}">Dashboard</a></li>
+                {% if is_granted('ROLE_USER_LIST') %}
+                    <li class="{{ route in ['user','user_new','user_create','user_show','user_edit','user_update','user_remove'] ? 'active' }}">
+                        <a href="{{ path('user') }}">Users</a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_SITE_LIST_OWN') %}
+                    <li class="{{ route in ['site','site_user','site_all','site_new','site_create','site_show','site_loopback_search','site_loopback_return','site_edit','site_update','site_remove'] ? 'active' }}">
+                        <a href="{{ path('site') }}">Sites</a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_BANNER_LIST_OWN') %}
+                    <li class="{{ route in ['banner','banner_site','banner_own','banner_all','banner_new','banner_create','banner_show','banner_edit','banner_update','banner_remove'] ? 'active' }}">
+                        <a href="{{ path('banner') }}">Banners</a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_CLICK_LIST_OWN') %}
+                    <li class="{{ route in ['click','click_user','click_own','click_site','click_all'] ? 'active' }}">
+                        <a href="{{ path('click') }}">Activity log</a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_CAMPAIGN_LIST_OWN') %}
+                    <li class="{{ route in ['campaign','campaign_user','campaign_all','campaign_new','campaign_create','campaign_show','campaign_overview','campaign_edit','campaign_update','campaign_remove'] ? 'active' }}">
+                        <a href="{{ path('campaign') }}">Campaigns</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <div class="btn-group pull-right">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i> {{ user }} <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ logout_url('yuno_control_center') }}">Logout</a></li>
+                </ul>
+            </div>
+
+            {% if route not in ['campaign','campaign_user','campaign_all','campaign_new','campaign_create','campaign_show','campaign_overview','campaign_edit','campaign_update','campaign_remove'] %}
+            <div class="divider-vertical pull-right"></div>
+            <div class="btn-group pull-right">
+                {% if user.selectedSite is none %}
+                {% set selected_site_class = 'btn-danger' %}
+                {% elseif user.selectedSite.id in user.sites|keys %}
+                    {% set selected_site_class = 'btn-success' %}
+                {% else %}
+                    {% set selected_site_class = 'btn-warning' %}
+                {% endif %}
+                <a class="btn dropdown-toggle {{ user.selectedSite is none ? 'btn-danger' : 'btn-success' }}" data-toggle="dropdown" href="#">
+                    {% if user.selectedSite %}
+                        {{ user.selectedSite }}
+                    {% else %}
+                        <em>Select a site</em>
+                    {% endif %}
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for site in user.sites %}
+                        <li><a href="{{ path('site_select', { 'id':site.id }) }}">
+                            {{ site }}
+                            {% if user.selectedSite is not none and site.id == user.selectedSite.id %}
+                                <i class="icon-arrow-left"></i>
+                            {% endif %}
+                        </a></li>
+                    {% endfor %}
+                    {% if is_granted('ROLE_SITE_CREATE') %}
+                        {% if user.sites|length > 0 %}
+                            <li class="divider"></li>
+                        {% endif %}
+                        <li><a href="{{ path('site_new') }}"><i class="icon-plus"></i> Create a new site</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

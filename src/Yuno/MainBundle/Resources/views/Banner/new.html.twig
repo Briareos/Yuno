@@ -1,0 +1,46 @@
+{% extends '::standard_layout.html.twig' %}
+
+{% block title %}Create new banner{% endblock %}
+
+{% block content %}
+    <script>
+        $(function () {
+            $('#banner_code').blur(function () {
+                var $code = $(this);
+                var $humanUrl = $('#banner_humanUrl');
+                var $botUrl = $('#banner_botUrl');
+                var $size = $('#banner_size');
+                $humanUrl.prop('disabled', true);
+                $botUrl.prop('disabled', true);
+                $size.prop('disabled', true);
+
+                $.ajax({
+                    url:'{{ path('banner_guess_info') }}',
+                    data:{
+                        code:$code.val()
+                    },
+                    type:'POST',
+                    success:function (data) {
+                        if (data.botUrl) {
+                            $botUrl.val(data.botUrl);
+                        } else {
+                            $botUrl.val('http://www.');
+                        }
+                        if (data.humanUrl) {
+                            $humanUrl.val(data.humanUrl);
+                        } else {
+                            $humanUrl.val('http://www.');
+                        }
+                        if (data.size) {
+                            $size.val(data.size);
+                        }
+                        $humanUrl.prop('disabled', false);
+                        $botUrl.prop('disabled', false);
+                        $size.prop('disabled', false);
+                    }
+                });
+            });
+        })
+    </script>
+    {% include 'MainBundle:Banner:form.html.twig' %}
+{% endblock %}

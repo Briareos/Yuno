@@ -1,0 +1,34 @@
+{% from 'MainBundle::macros.html.twig' import form_actions %}
+
+<form novalidate class="form-horizontal" action="{{ entity.id ? path('campaign_update', { 'id': entity.id }) : path('campaign_create') }}" method="post" {{ form_enctype(form) }}>
+    <input type="hidden" name="_method" value="{{ entity.id ? 'PUT' : 'POST' }}"/>
+
+    {{ form_errors(form) }}
+
+    <fieldset>
+        <legend>General info</legend>
+        {{ form_row(form.name, { 'attr': { 'class': 'input-xlarge' } }) }}
+        {{ form_row(form.user) }}
+        {{ form_row(form.active) }}
+    </fieldset>
+    <fieldset>
+        <legend>Whitelisted and blacklisted locations</legend>
+        {{ form_row(form.countryList, { 'attr': { 'class': 'input-xxlarge' } }) }}
+        {{ form_row(form.regionList, { 'attr': { 'class': 'input-xxlarge' } }) }}
+        {{ form_row(form.cityList) }}
+    </fieldset>
+    <fieldset>
+        <legend>Running time</legend>
+        {{ form_row(form.timezone) }}
+        {{ form_row(form.schedule) }}
+    </fieldset>
+    <fieldset>
+        <legend>Allowed referrers</legend>
+        {{ form_row(form.allowEmptyReferrer) }}
+        {{ form_row(form.referrerList) }}
+    </fieldset>
+
+    {{ form_rest(form) }}
+
+    {{ form_actions(entity.id, 'campaign') }}
+</form>

@@ -1,0 +1,7 @@
+{% if is_granted('EDIT', entity) %}
+<ul class="nav nav-tabs">
+    <li class="{{ route == 'campaign_show' ? 'active' }}"><a href="{{ path('campaign_show', { 'id': entity.id }) }}">Info</a></li>
+    <li class="{{ route == 'campaign_overview' ? 'active' }}"><a href="{{ path('campaign_overview', { 'id': entity.id }) }}">Overview</a></li>
+    <li class="{{ route == 'campaign_click' ? 'active' }}"><a href="{{ path('campaign_click', { 'id': entity.id }) }}">Click test</a></li>
+</ul>
+{% endif %}

@@ -1,0 +1,86 @@
+{% extends '::standard_layout.html.twig' %}
+{% from 'MainBundle::macros.html.twig' import entity_actions %}
+
+{% block title %}Campaign <em>{{ entity }}</em>{% endblock %}
+
+{% block content %}
+    {% include 'MainBundle:Campaign:nav.html.twig' %}
+    {{ entity_actions(entity.id, 'campaign') }}
+
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <th>Name</th>
+            <td>{{ entity.name }}</td>
+        </tr>
+        <tr>
+            <th>Active</th>
+            <td>
+                <div class="toggle-button">
+                    <input type="checkbox"
+                            {% if is_granted('EDIT', entity) %}
+                                data-path="{{ path('campaign_set_active', { 'id': entity.id, 'csrf': csrf_token('campaign-set-active') }) }}"
+                            {% else %}
+                                disabled="disabled"
+                            {% endif %}
+                            {% if entity.active %}
+                                checked="checked"
+                            {% endif %}
+                            >
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>Owner</th>
+            <td>{{ entity.user }}</td>
+        </tr>
+        <tr>
+            <th>Created</th>
+            <td>{{ entity.createdAt|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>Timezone</th>
+            <td>{{ entity.timezone }}</td>
+        </tr>
+        <tr>
+            <th>Active banner groups</th>
+            <td>
+                <table class="inner-table">
+                    <tbody>
+                    {% for banner_group in banner_groups %}
+                        <tr>
+                            <td>
+                                <div class="toggle-button">
+                                    <input type="checkbox"
+                                            {% if is_granted('EDIT', entity) %}
+                                                data-path="{{ path('campaign_merge_group', { 'id': entity.id, 'csrf': csrf_token('campaign-merge-group'), 'group_id': banner_group.id }) }}"
+                                            {% else %}
+                                                disabled="disabled"
+                                            {% endif %}
+                                            {% if banner_group.id in campaign_groups|keys %}
+                                                checked="checked"
+                                            {% endif %}
+                                            >
+                                </div>
+                            </td>
+                            <td>
+                                <span class="label label-inverse">{{ banner_group }}</span>
+                            </td>
+                            <td>
+                                <span class="badge badge-inverse">
+                                    {% if banner_count[banner_group.id] is defined %}
+                                        {{ banner_count[banner_group.id].total }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                            </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

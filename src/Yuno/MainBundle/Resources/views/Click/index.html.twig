@@ -1,0 +1,118 @@
+{% extends '::standard_layout.html.twig' %}
+
+{% block title %}Activity log{% endblock %}
+
+{% block content %}
+    <ul class="nav nav-tabs">
+        <li class="{{ route == 'click' ? 'active' }}"><a href="{{ path('click') }}">{{ user.selectedSite }} clicks</a></li>
+        {% if is_granted('ROLE_CLICK_LIST_ALL') and click_users|length %}
+            <li class="{{ route == 'click_site' ? 'active' }} dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    {% if selected_click_site is not null %}
+                        Clicks on {{ selected_click_site }}
+                    {% else %}
+                        Select a site
+                    {% endif %}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for click_user in click_users %}
+                        <li class="nav-header">{{ click_user }}'s sites</li>
+                        {% if click_user.sites|length %}
+                            {% for user_site in click_user.sites %}
+                                <li><a href="{{ path('click_site', { 'id': user_site.id }) }}">{{ user_site }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li><a href="#" onclick="return false"><em>None</em></a></li>
+                        {% endif %}
+                        {% if not loop.last %}
+                            <li class="divider"></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endif %}
+        <li class="{{ route == 'click_own' ? 'active' }}">
+            <a href="{{ path('click_own') }}">Your clicks</a>
+        </li>
+        {% if is_granted('ROLE_CLICK_LIST_ALL') %}
+            <li class="{{ route == 'click_user' ? 'active' }} dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    {% if selected_click_user is not null %}
+                        {{ selected_click_user }}'s click
+                    {% else %}
+                        Select a user
+                    {% endif %}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for click_user in click_users %}
+                        <li><a href="{{ path('click_user', { 'id': click_user.id }) }}">{{ click_user }}'s clicks</a></li>
+                    {% endfor %}
+                </ul>
+
+            </li>
+            <li class="{{ route == 'click_all' ? 'active' }}"><a href="{{ path('click_all') }}">All clicks</a></li>
+        {% endif %}
+    </ul>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Created at</th>
+            <th>Referrer</th>
+            <th>IP</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>Region</th>
+            <th>Continent</th>
+            <th>Useragent</th>
+            <th>Blocked</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Id</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if entities|length %}
+            {% for entity in entities %}
+                <tr>
+                    <td><a href="{{ path('click_show', { 'id': entity.id }) }}">{{ entity.createdAt|localizeddate('medium','medium',user.locale) }}</a></td>
+                    <td>{{ entity.referrer }}</td>
+                    <td>{{ entity.ip }}</td>
+                    <td>{{ entity.city }}</td>
+                    <td>{{ entity.country }}</td>
+                    <td>{{ entity.region }}</td>
+                    <td>{{ entity.continent }}</td>
+                    <td style="overflow: hidden; text-overflow: ellipsis;">{{ entity.userAgent }}</td>
+                    <td>{{ entity.blocked }}</td>
+                    <td>{{ entity.latitude }}</td>
+                    <td>{{ entity.longitude }}</td>
+                    <td>{{ entity.id }}</td>
+                    <td>
+                        <ul>
+                            <li>
+                                <a href="{{ path('click_show', { 'id': entity.id }) }}">show</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="13">No clicks captured.</td>
+            </tr>
+        {% endif %}
+        </tbody>
+        {% if paginator is defined %}
+            <tfoot>
+            <tr>
+                <td colspan="13">
+                    {% include 'MainBundle::pagination.html.twig' %}
+                </td>
+            </tr>
+            </tfoot>
+        {% endif %}
+    </table>
+{% endblock %}

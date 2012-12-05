@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="Yuno\MainBundle\Entity\ClickRepository" name="Yuno\MainBundle\Entity\Click" table="click">
+        <indexes>
+            <index name="ip_time" columns="ip,createdAt"/>
+            <index name="blocked_time" columns="blocked,createdAt"/>
+        </indexes>
+        <named-queries>
+            <named-query name="findAllBySite" query="Select c From MainBundle:Click c Inner Join c.banner b Where b.site = :site Order By c.createdAt Desc"/>
+            <named-query name="findAllByUser" query="Select c From MainBundle:Click c Inner Join c.banner b Inner Join b.site s Where s.user = :user Order By c.createdAt Desc"/>
+            <named-query name="findAll" query="Select c From MainBundle:Click c Order By c.createdAt Desc"/>
+        </named-queries>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="createdAt" type="datetime" column="createdAt"/>
+        <field name="referrer" type="text" column="referrer" nullable="true"/>
+        <field name="ip" type="string" column="ip" length="45"/>
+        <field name="city" type="string" column="city" length="255" nullable="true"/>
+        <field name="country" type="string" column="country" length="2" nullable="true"/>
+        <field name="region" type="string" column="region" length="2" nullable="true"/>
+        <field name="continent" type="string" column="continent" length="2" nullable="true"/>
+        <field name="userAgent" type="text" column="userAgent" nullable="true"/>
+        <field name="blocked" type="smallint" column="blocked" nullable="true"/>
+        <field name="latitude" type="decimal" column="latitude" scale="6" nullable="true"/>
+        <field name="longitude" type="decimal" column="longitude" scale="6" nullable="true"/>
+        <field name="log" type="array" column="log" nullable="true"/>
+        <many-to-one target-entity="Yuno\MainBundle\Entity\Banner" field="banner" inversed-by="clicks">
+            <join-column name="banner_id" referenced-column-name="id" nullable="true" on-delete="CASCADE"/>
+        </many-to-one>
+        <many-to-one target-entity="Yuno\MainBundle\Entity\Campaign" field="campaign" inversed-by="clicks">
+            <join-column name="campaign_id" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

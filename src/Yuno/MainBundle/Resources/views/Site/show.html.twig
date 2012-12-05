@@ -1,0 +1,55 @@
+{% extends '::standard_layout.html.twig' %}
+{% from 'MainBundle::macros.html.twig' import entity_actions %}
+
+{% block title %}Site <em>{{ entity }}</em>{% endblock %}
+
+{% block content %}
+    {% include 'MainBundle:Site:nav.html.twig' %}
+
+    {{ entity_actions(entity.id, 'site') }}
+
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <th>Name</th>
+            <td>{{ entity.name }}</td>
+        </tr>
+        <tr>
+            <th>Url</th>
+            <td>{{ entity.url }}</td>
+        </tr>
+        <tr>
+            <th>Owner</th>
+            <td>{{ entity.user }}</td>
+        </tr>
+        <tr>
+            <th>Secret</th>
+            <td>
+                {% if entity.secret %}
+                    <span class="label label-success">Present</span>
+                {% else %}
+                    <span class="label label-warning">Empty</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Created</th>
+            <td><span class="tooltip-me" data-title="{{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.createdAt|dateage }} ago</span></td>
+        </tr>
+        <tr>
+            <th>Categories <a class="btn btn-primary btn-mini site-update-categories" href="{{ path('site_update_categories', { 'id': entity.id }) }}">Update</a></th>
+            <td>
+                {% if entity.categories is not empty %}
+                    <ul>
+                        {% for category in entity.categories %}
+                            <li>{{ category }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+
+                {% endif %}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

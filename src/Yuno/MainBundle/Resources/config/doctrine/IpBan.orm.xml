@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity repository-class="Yuno\MainBundle\Entity\IpBanRepository" name="Yuno\MainBundle\Entity\IpBan" table="ip_ban">
+    <id name="id" type="integer" column="id">
+      <generator strategy="AUTO"/>
+    </id>
+    <field name="createdAt" type="datetime" column="createdAt"/>
+    <field name="ipv4" type="string" column-definition="BINARY(4) NULL" column="ipv4" length="255"/>
+    <field name="ipv6" type="string" column-definition="BINARY(16) NULL" column="ipv6" length="255"/>
+    <field name="subnet" type="smallint" column="subnet"/>
+  </entity>
+</doctrine-mapping>

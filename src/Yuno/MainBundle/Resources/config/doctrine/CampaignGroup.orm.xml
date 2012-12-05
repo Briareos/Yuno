@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="Yuno\MainBundle\Entity\CampaignGroupRepository" name="Yuno\MainBundle\Entity\CampaignGroup" table="campaign_group">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="createdAt" type="datetime" column="createdAt"/>
+        <field name="clickLimit" type="integer" column="clickLimit"/>
+        <field name="clickDispersion" type="array" column="clickDispersion"/>
+        <many-to-one target-entity="Yuno\MainBundle\Entity\Campaign" field="campaign" inversed-by="campaignGroups">
+            <join-column name="campaign_id" nullable="false" on-delete="CASCADE" referenced-column-name="id"/>
+        </many-to-one>
+        <many-to-one target-entity="Yuno\MainBundle\Entity\BannerGroup" field="bannerGroup" inversed-by="campaignGroups">
+            <join-column name="bannerGroup_id" nullable="false" on-delete="CASCADE" referenced-column-name="id"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

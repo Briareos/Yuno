@@ -1,0 +1,35 @@
+{% extends '::standard_layout.html.twig' %}
+
+{% block title %}Click simulation{% endblock %}
+
+{% block content %}
+    {% include 'MainBundle:Campaign:nav.html.twig   ' %}
+
+    {% if status is not null %}
+        <div class="well">
+            {% if status > 0 %}
+                <h5>Click status: <span class="label label-important">not passed</span></h5>
+                <p>
+                    Reason: <strong>{{ reason }}</strong>
+                </p>
+            {% else %}
+                <h4>Click status: <span class="label label-info">passed</span></h4>
+            {% endif %}
+            <p>Step-by-step click log:</p>
+            <ul>
+                {% for log_entry in log %}
+                    <li>{{ log_entry }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form class="form-horizontal" method="get" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Click!</button>
+            <a class="btn" href="{{ path('campaign_click', { 'id': entity.id }) }}">Reset</a>
+        </div>
+    </form>
+{% endblock %}

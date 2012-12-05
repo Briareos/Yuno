@@ -1,0 +1,28 @@
+{% extends '::standard_layout.html.twig' %}
+
+{% block title %}Delete user <em>{{ entity }}?</em>{% endblock %}
+
+{% block content %}
+    <div class="alert alert-danger">
+        <h3>Warning</h3>
+
+        <p><i class="icon-exclamation-sign"></i> This action cannot be undone.</p>
+    </div>
+    <p>It will be cascaded into:</p>
+    <ul>
+        <li>All user's sites</li>
+        <li>All user's banners</li>
+        <li>All user's campaigns</li>
+        <li>All user's clicks</li>
+    </ul>
+    <form action="{{ path('user_delete', { 'id': entity.id }) }}" method="post">
+        <input type="hidden" name="_method" value="DELETE"/>
+        {{ form_widget(delete_form) }}
+
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit"><i class="icon-white icon-remove-sign"></i> Confirm delete</button>
+            <a class="btn" href="{{ path('user') }}"><i class="icon-arrow-left"></i> Back to list</a>
+            <a class="btn" href="{{ path('user_show', { 'id': entity.id }) }}"><i class="icon-eye-open"></i> Back to user</a>
+        </div>
+    </form>
+{% endblock %}

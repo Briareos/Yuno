@@ -1,0 +1,74 @@
+{% extends '::standard_layout.html.twig' %}
+
+{% block content %}
+<h1>Click</h1>
+
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th>Createdat</th>
+            <td>{{ entity.createdAt|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>Referer</th>
+            <td>{{ entity.referer }}</td>
+        </tr>
+        <tr>
+            <th>Ip</th>
+            <td>{{ entity.ip }}</td>
+        </tr>
+        <tr>
+            <th>City</th>
+            <td>{{ entity.city }}</td>
+        </tr>
+        <tr>
+            <th>Country</th>
+            <td>{{ entity.country }}</td>
+        </tr>
+        <tr>
+            <th>Region</th>
+            <td>{{ entity.region }}</td>
+        </tr>
+        <tr>
+            <th>Continent</th>
+            <td>{{ entity.continent }}</td>
+        </tr>
+        <tr>
+            <th>Searchquery</th>
+            <td>{{ entity.searchQuery }}</td>
+        </tr>
+        <tr>
+            <th>Searchengine</th>
+            <td>{{ entity.searchEngine }}</td>
+        </tr>
+        <tr>
+            <th>Useragent</th>
+            <td>{{ entity.userAgent }}</td>
+        </tr>
+        <tr>
+            <th>Blocked</th>
+            <td>{{ entity.blocked }}</td>
+        </tr>
+        <tr>
+            <th>Latitude</th>
+            <td>{{ entity.latitude }}</td>
+        </tr>
+        <tr>
+            <th>Longitude</th>
+            <td>{{ entity.longitude }}</td>
+        </tr>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('click') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

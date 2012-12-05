@@ -1,0 +1,74 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <!--
+    <parameters>
+        <parameter key="main.example.class">Yuno\MainBundle\Example</parameter>
+    </parameters>
+
+    <services>
+        <service id="main.example" class="%main.example.class%">
+            <argument type="service" id="service_id" />
+            <argument>plain_value</argument>
+            <argument>%parameter_name%</argument>
+        </service>
+    </services>
+    -->
+    <services>
+        <service id="twig.extension.localizeddate" class="Twig_Extensions_Extension_Intl">
+            <tag name="twig.extension"/>
+        </service>
+        <service id="user.password.listener" class="Yuno\MainBundle\EventListener\UserPasswordListener">
+            <argument type="service" id="security.encoder_factory"/>
+            <tag name="doctrine.event_listener" event="prePersist"/>
+            <tag name="doctrine.event_listener" event="preUpdate"/>
+        </service>
+        <service id="user.activity.listener" class="Yuno\MainBundle\EventListener\UserActivityListener">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="security.context"/>
+            <tag name="kernel.event_listener" event="kernel.response" method="onKernelResponse"/>
+            <tag name="kernel.event_listener" event="security.interactive_login" method="onSecurityInteractiveLogin"/>
+        </service>
+        <service id="yuno.security.voter" class="Yuno\MainBundle\Security\Voter\SecurityVoter" public="false">
+            <tag name="security.voter" priority="10000"/>
+        </service>
+        <service id="form.type.roles" class="Yuno\MainBundle\Form\RolesType">
+            <argument>%security.role_hierarchy.roles%</argument>
+            <tag name="form.type" alias="roles"/>
+        </service>
+        <service id="yuno.select_site.listener" class="Yuno\MainBundle\EventListener\SelectSiteListener">
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="controller_resolver"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+        </service>
+        <service id="twig.extension.yuno" class="Yuno\MainBundle\Twig\Extension\YunoExtension">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <tag name="twig.extension"/>
+        </service>
+        <service id="banner.group.listener" class="Yuno\MainBundle\EventListener\BannerGroupListener">
+            <tag name="doctrine.event_listener" event="prePersist"/>
+            <tag name="doctrine.event_listener" event="postPersist"/>
+            <tag name="doctrine.event_listener" event="preUpdate"/>
+            <tag name="doctrine.event_listener" event="postUpdate"/>
+        </service>
+        <service id="yuno.encoder" class="Yuno\MainBundle\Util\Encoder">
+            <argument type="string">%encryption_key%</argument>
+        </service>
+        <service id="yuno.click.filter" class="Yuno\MainBundle\Click\Filter">
+        </service>
+        <service id="yuno.click.listener" class="Yuno\MainBundle\EventListener\ClickListener">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="yuno.encoder"/>
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="2048"/>
+        </service>
+        <!--
+        <service id="form.type_extension.autocomplete_choice" class="Yuno\MainBundle\Form\AutocompleteChoiceTypeExtension">
+            <tag name="form.type_extension" alias="choice"/>
+        </service>
+        -->
+    </services>
+</container>

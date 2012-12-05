@@ -1,0 +1,63 @@
+{% extends '::standard_layout.html.twig' %}
+{% from 'MainBundle::macros.html.twig' import entity_actions %}
+
+{% block title %}User <em>{{ entity }}</em>{% endblock %}
+
+{% block content %}
+    {{ entity_actions(entity.id, 'user') }}
+
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <th>Username</th>
+            <td>{{ entity.username }}</td>
+        </tr>
+        <tr>
+            <th>Password</th>
+            <td>{{ entity.password }}</td>
+        </tr>
+        <tr>
+            <th>Salt</th>
+            <td>{{ entity.salt }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ entity.email }}</td>
+        </tr>
+        <tr>
+            <th>Locale</th>
+            <td>{{ entity.locale }}</td>
+        </tr>
+        <tr>
+            <th>Timezone</th>
+            <td>{{ entity.timezone }}</td>
+        </tr>
+        <tr>
+            <th>Roles</th>
+            <td>
+                <ul>
+                    {% for role in entity.roles %}
+                        <li>{{ role }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Createdat</th>
+            <td>{{ entity.createdAt|localizeddate }}</td>
+        </tr>
+        <tr>
+            <th>Lastloginat</th>
+            <td>{{ entity.lastLoginAt|localizeddate }}</td>
+        </tr>
+        <tr>
+            <th>Lastactiveat</th>
+            <td>{{ entity.lastActiveAt|localizeddate('medium', 'medium', locale) }}</td>
+        </tr>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends '::standard_layout.html.twig' %}
+{% from 'MainBundle::macros.html.twig' import list_actions %}
+
+{% block title %}Campaign list{% endblock %}
+
+{% block content %}
+    {% if is_granted('ROLE_CAMPAIGN_LIST_ALL') %}
+        <ul class="nav nav-tabs">
+            <li class="{{ route == 'campaign' ? 'active' }}"><a href="{{ path('campaign') }}">Own campaigns</a></li>
+            <li class="dropdown {{ route == 'campaign_user' ? 'active' }}">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    {% if selected_user is defined %}
+                        {{ selected_user }}'s campaigns
+                    {% else %}
+                        Select a user
+                    {% endif %}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for campaign_user in campaign_users %}
+                        <li><a href="{{ path('campaign_user', { 'id': campaign_user.id }) }}">{{ campaign_user }}'s campaigns</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li class="{{ route == 'campaign_all' ? 'active' }}"><a href="{{ path('campaign_all') }}">All campaigns</a></li>
+        </ul>
+    {% endif %}
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Created at</th>
+            <th>Active</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if entities|length %}
+            {% for entity in entities %}
+                <tr>
+                    <td><a href="{{ path('campaign_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
+                    <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>
+                        <div class="toggle-button">
+                            <input type="checkbox"
+                                    {% if is_granted('EDIT', entity) %}
+                                        data-path="{{ path('campaign_set_active', { 'id': entity.id, 'csrf': csrf_token('campaign-set-active') }) }}"
+                                    {% else %}
+                                        disabled="disabled"
+                                    {% endif %}
+                                    {% if entity.active %}
+                                        checked="checked"
+                                    {% endif %}
+                                    >
+                        </div>
+                    </td>
+                    <td>{{ list_actions(entity, 'campaign') }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4"><em>No campaigns found.</em></td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    {% if is_granted('ROLE_CAMPAIGN_CREATE') %}
+        <a class="btn btn-primary" href="{{ path('campaign_new') }}">
+            <i class="icon-white icon-plus-sign"></i> Create a new campaign
+        </a>
+    {% endif %}
+{% endblock %}

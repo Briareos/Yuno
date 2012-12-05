@@ -1,0 +1,21 @@
+{% extends '::standard_layout.html.twig' %}
+
+{% block title %}Delete banner for <em>{{ entity.group }}?</em>{% endblock %}
+
+{% block content %}
+    <div class="alert alert-danger">
+        <h3>Warning</h3>
+
+        <p><i class="icon-exclamation-sign"></i> This action cannot be undone.</p>
+    </div>
+    <form action="{{ path('banner_delete', { 'id': entity.id }) }}" method="post">
+        <input type="hidden" name="_method" value="DELETE"/>
+        {{ form_widget(delete_form) }}
+
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit"><i class="icon-white icon-remove-sign"></i> Confirm delete</button>
+            <a class="btn" href="{{ path('banner') }}"><i class="icon-arrow-left"></i> Back to list</a>
+            <a class="btn" href="{{ path('banner_show', { 'id': entity.id }) }}"><i class="icon-eye-open"></i> Back to banner</a>
+        </div>
+    </form>
+{% endblock %}

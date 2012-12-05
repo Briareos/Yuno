@@ -1,0 +1,37 @@
+{% extends '::standard_layout.html.twig' %}
+
+{% block title %}Loopback test{% endblock %}
+
+{% block content %}
+    {% include 'MainBundle:Site:nav.html.twig' %}
+
+    {% if time is defined %}
+        <div class="alert alert-block">
+            <h4>Note</h4>
+
+            <p>The information below are valid for one-time only.</p>
+        </div>
+        <div class="well" xmlns="http://www.w3.org/1999/html">
+            <p>
+                Welcome back. This is the merchant site. Your results are:
+            </p>
+            <dl class="dl-horizontal">
+                <dt>Total time</dt>
+                <dd>{{ time|number_format(4) }} seconds</dd>
+                <dt>HTTP referrer</dt>
+                <dd>{{ referrer ? referrer : '—' }}</dd>
+                <dt>HTTP origin</dt>
+                <dd>{{ origin ? origin : '—' }}</dd>
+            </dl>
+        </div>
+        <hr>
+    {% endif %}
+    <h4>Search results for <em>best online offers</em>:</h4>
+
+    <a style="color: #12C; font-family: arial,sans-serif" href="{{ path('site_loopback_yuno', { 'id': entity.id }) }}">Our site has the <strong>best online offers</strong>™</a>
+    <div style="color: #093 !important; font-family: arial,sans-serif">www<span></span>.best-online-offers<span></span>.com</div>
+    <div style="font-family: arial,sans-serif">
+        Warning - our offers are just too good.<br>
+        You still have a chance to back off.
+    </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends '::standard_layout.html.twig' %}
+{% from 'MainBundle::macros.html.twig' import list_actions %}
+
+{% block title %}User list{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Permissions</th>
+            <th>Created at</th>
+            <th>Last login</th>
+            <th>Last activity</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('user_show', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+                <td><a href="mailto:{{ entity.email }}">{{ entity.email }}</a></td>
+                <td>
+                    {% set user_roles %}
+                    <ul>
+                        {% for role in entity.roles %}
+                            <li>{{ role }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endset %}
+                    <a href="#" onclick="return false" class="btn btn-mini popover-me" data-content="{{ user_roles }}" data-html="true" data-title="{{ entity }}'s permissions">View permissions</a>
+                </td>
+                <td>{% if entity.createdAt %}<span class="tooltip-me" data-title="{{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.createdAt|dateage }} ago</span>{% endif %}</td>
+                <td>{% if entity.lastLoginAt %}<span class="tooltip-me" data-title="{{ entity.lastLoginAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.lastLoginAt|dateage }} ago</span>{% endif %}</td>
+                <td>{% if entity.lastActiveAt %}<span class="tooltip-me" data-title="{{ entity.lastActiveAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.lastActiveAt|dateage }} ago</span>{% endif %}</td>
+                <td>{{ list_actions(entity, 'user') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_granted('ROLE_USER_CREATE') %}
+        <a class="btn btn-primary" href="{{ path('user_new') }}">
+            <i class="icon-white icon-plus-sign"></i> Create a new user
+        </a>
+    {% endif %}
+{% endblock %}

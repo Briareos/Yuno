@@ -1,0 +1,102 @@
+{% extends '::standard_layout.html.twig' %}
+{% from 'MainBundle::macros.html.twig' import list_actions %}
+
+{% block title %}Banner list{% endblock %}
+
+{% block content %}
+    <ul class="nav nav-tabs">
+        <li class="{{ route == 'banner' ? 'active' }}"><a href="{{ path('banner') }}">{{ user.selectedSite }} banners</a></li>
+        {% if is_granted('ROLE_BANNER_LIST_ALL') and banner_users|length %}
+            <li class="{{ route == 'banner_site' ? 'active' }} dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    {% if selected_banner_site is not null %}
+                        Banners on {{ selected_banner_site }}
+                    {% else %}
+                        Select a site
+                    {% endif %}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for banner_user in banner_users %}
+                        <li class="nav-header">{{ banner_user }}'s banners</li>
+                        {% if banner_user.sites|length %}
+                            {% for user_site in banner_user.sites %}
+                                <li><a href="{{ path('banner_site', { 'id': user_site.id }) }}">{{ user_site }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li><a href="#" onclick="return false"><em>None</em></a></li>
+                        {% endif %}
+                        {% if not loop.last %}
+                            <li class="divider"></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
+            </li>
+        {% endif %}
+        <li class="{{ route == 'banner_own' ? 'active' }}">
+            <a href="{{ path('banner_own') }}">Your banners</a>
+        </li>
+        {% if is_granted('ROLE_BANNER_LIST_ALL') %}
+            <li class="{{ route == 'banner_user' ? 'active' }} dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    {% if selected_banner_user is not null %}
+                        {{ selected_banner_user }}'s banners
+                    {% else %}
+                        Select a user
+                    {% endif %}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for banner_user in banner_users %}
+                        <li><a href="{{ path('banner_user', { 'id': banner_user.id }) }}">{{ banner_user }}'s banners</a></li>
+                    {% endfor %}
+                </ul>
+
+            </li>
+            <li class="{{ route == 'banner_all' ? 'active' }}"><a href="{{ path('banner_all') }}">All banners</a></li>
+        {% endif %}
+    </ul>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Size</th>
+            <th>Group</th>
+            <th>Category</th>
+            <th>Code</th>
+            <th>Created at</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if entities|length %}
+            {% for entity in entities %}
+                <tr>
+                    <td><span class="label label-info">{{ entity.size }}</span></td>
+                    <td><span class="label label-inverse">{{ entity.group }}</span></td>
+                    <td>{{ entity.site.getCategoryById(entity.category) }}</td>
+                    <td><a href="#" onclick="return false" class="popover-me" data-content="{{ entity.code }}">View</a></td>
+                    <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    <td>{{ list_actions(entity, 'banner') }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="7"><em>No banners found.</td>
+            </tr>
+        {% endif %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="8">{% include 'MainBundle::pagination.html.twig' %}</td>
+        </tr>
+        </tfoot>
+    </table>
+
+    {% if is_granted('ROLE_BANNER_CREATE') %}
+        <a class="btn btn-primary" href="{{ path('banner_new') }}">
+            <i class="icon-white icon-plus-sign"></i> Create a new banner
+        </a>
+    {% endif %}
+{% endblock %}

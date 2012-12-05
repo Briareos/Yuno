@@ -1,0 +1,80 @@
+{% extends '::standard_layout.html.twig' %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Create a new campaign</h1>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Banner group (merchant)</th>
+            <th>Site name</th>
+            <th colspan="2">Click dispersion</th>
+            <th>Number of clicks to accept</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td rowspan="3">lastminute.com</td>
+
+            <td>FashionMinute</td>
+            <td><input data-group="a" id="r1" data-value="#v1" type="range" min="0" max="100" value="33"></td>
+            <td>
+                <div class="input-append"><input type="text" class="input-mini input-a" id="v1"><span class="add-on">%</span></div>
+            </td>
+
+            <td rowspan="3"><input type="text"></td>
+        </tr>
+        <tr>
+            <td>FirstDrawer</td>
+            <td><input data-group="a" id="r2" data-value="#v2" type="range" min="0" max="100" value="33"></td>
+            <td>
+                <div class="input-append"><input type="text" class="input-mini input-a" id="v2"><span class="add-on">%</span></div>
+            </td>
+        </tr>
+        <tr>
+            <td>Neki Treci Sajt</td>
+            <td><input data-group="a" id="r3" data-value="#v3" type="range" min="0" max="100" value="34"></td>
+            <td>
+                <div class="input-append"><input type="text" class="input-mini input-a" id="v3"><span class="add-on">%</span></div>
+            </td>
+        </tr>
+
+        <tr>
+            <td rowspan="3">lastminute.com</td>
+
+            <td>FashionMinute</td>
+            <td><input data-group="b" id="r4" data-value="#v4" type="range" min="0" max="100" value="33"></td>
+            <td>
+                <div class="input-append"><input type="text" class="input-mini input-a" id="v4"><span class="add-on">%</span></div>
+            </td>
+
+            <td rowspan="3"><input type="text"></td>
+        </tr>
+        <tr>
+            <td>FirstDrawer</td>
+            <td><input data-group="b" id="r5" data-value="#v5" type="range" min="0" max="100" value="33"></td>
+            <td>
+                <div class="input-append"><input type="text" class="input-mini input-a" id="v5"><span class="add-on">%</span></div>
+            </td>
+        </tr>
+        <tr>
+            <td>Neki Treci Sajt</td>
+            <td><input data-group="b" id="r6" data-value="#v6" type="range" min="0" max="100" value="34"></td>
+            <td>
+                <div class="input-append"><input type="text" class="input-mini input-a" id="v6"><span class="add-on">%</span></div>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+
+    <script>
+        $(function () {
+
+        });
+    </script>
+{% endblock %}

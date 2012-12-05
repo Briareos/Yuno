@@ -1,0 +1,8 @@
+front:
+    pattern: /
+
+main:
+    resource: "@MainBundle/Controller/"
+    type:     annotation
+    prefix:   /yuno-control-center/
+

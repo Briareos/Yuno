@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="Yuno\MainBundle\Entity\BannerRepository" name="Yuno\MainBundle\Entity\Banner" table="banner">
+        <named-queries>
+            <named-query name="findAllBySite" query="Select b From MainBundle:Banner b Inner Join b.site s Inner Join s.user u Where s = :site"/>
+            <named-query name="findAllByUser" query="Select b From MainBundle:Banner b Inner Join b.site s Inner Join s.user u Where u = :user"/>
+            <named-query name="findAll" query="Select b From MainBundle:Banner b"/>
+        </named-queries>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="size" type="string" column="size" length="255"/>
+        <field name="category" type="string" column="category" length="255"/>
+        <field name="code" type="text" column="code"/>
+        <field name="humanUrl" type="string" column="humanUrl" length="255"/>
+        <field name="botUrl" type="string" column="botUrl" length="255"/>
+        <field name="createdAt" type="datetime" column="createdAt"/>
+        <many-to-one target-entity="Yuno\MainBundle\Entity\Site" field="site" inversed-by="banners">
+            <join-column name="site_id" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+        </many-to-one>
+        <many-to-one target-entity="Yuno\MainBundle\Entity\BannerGroup" field="group" inversed-by="banners">
+            <join-column name="group_id" referenced-column-name="id" on-delete="CASCADE"/>
+        </many-to-one>
+        <one-to-many target-entity="Yuno\MainBundle\Entity\Click" mapped-by="banner" field="clicks" index-by="id"/>
+    </entity>
+</doctrine-mapping>

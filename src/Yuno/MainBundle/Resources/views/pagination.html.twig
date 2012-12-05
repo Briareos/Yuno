@@ -1,0 +1,33 @@
+<div class="pagination pagination-centered">
+    <ul>
+        {% if paginator.previous is defined %}
+            <li><a href="{{ path(path, route_params|merge({'page':paginator.previous})) }}">«</a></li>
+        {% else %}
+            <li class="disabled"><a>«</a></li>
+        {% endif %}
+
+        {% if paginator.first < paginator.firstPageInRange %}
+            <li><a href="{{ path(route, route_params|merge({'page':paginator.first})) }}">{{ paginator.first }}</a></li>
+            <li class="disabled"><a>…</a></li>
+        {% endif %}
+
+        {% for pageNumber in paginator.pagesInRange %}
+            {% if pageNumber == paginator.current %}
+                <li class="active"><a href="{{ path(route, route_params|merge({'page':pageNumber})) }}">{{ pageNumber }}</a></li>
+            {% else %}
+                <li><a href="{{ path(route, route_params|merge({'page':pageNumber})) }}">{{ pageNumber }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if paginator.last > paginator.lastPageInRange %}
+            <li class="disabled"><a>…</a></li>
+            <li><a href="{{ path(route, route_params|merge({'page':paginator.last})) }}">{{ paginator.last }}</a></li>
+        {% endif %}
+
+        {% if paginator.next is defined %}
+            <li><a href="{{ path(route, route_params|merge({'page':paginator.next})) }}">»</a></li>
+        {% else %}
+            <li class="disabled"><a>»</a></li>
+        {% endif %}
+    </ul>
+</div>

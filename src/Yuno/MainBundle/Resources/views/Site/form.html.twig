@@ -1,0 +1,9 @@
+{% from 'MainBundle::macros.html.twig' import form_actions %}
+
+<form class="form-horizontal" action="{{ entity.id ? path('site_update', { 'id': entity.id }) : path('site_create') }}" method="post" {{ form_enctype(form) }}>
+    <input type="hidden" name="_method" value="{{ entity.id ? 'PUT' : 'POST' }}"/>
+
+    {{ form_widget(form) }}
+
+    {{ form_actions(entity.id, 'site') }}
+</form>

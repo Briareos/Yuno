@@ -1,0 +1,63 @@
+{% extends '::standard_layout.html.twig' %}
+{% from 'MainBundle::macros.html.twig' import list_actions %}
+
+{% block title %}Site list{% endblock %}
+
+{% block content %}
+    {% if is_granted('ROLE_SITE_LIST_ALL') %}
+        <ul class="nav nav-tabs">
+            <li class="{{ route == 'site' ? 'active' }}"><a href="{{ path('site') }}">Own sites</a></li>
+            <li class="dropdown {{ route == 'site_user' ? 'active' }}">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    {% if selected_user is defined %}
+                        {{ selected_user }}'s sites
+                    {% else %}
+                        Select a user
+                    {% endif %}
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for site_user in site_users %}
+                        <li><a href="{{ path('site_user', { 'id': site_user.id }) }}">{{ site_user }}'s sites</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li class="{{ route == 'site_all' ? 'active' }}"><a href="{{ path('site_all') }}">All sites</a></li>
+        </ul>
+    {% endif %}
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Url</th>
+            <th>Owner</th>
+            <th>Created at</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if entities|length %}
+            {% for entity in entities %}
+                <tr>
+                    <td><a href="{{ path('site_show', { 'id': entity.id }) }}">{{ entity.name }}</a></td>
+                    <td>{{ entity.url }}</td>
+                    <td>{{ entity.user }}</td>
+                    <td>{% if entity.createdAt %}{{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}{% endif %}</td>
+                    <td>{{ list_actions(entity, 'site') }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5"><em>No sites found.</em></td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    {% if is_granted('ROLE_SITE_CREATE') %}
+        <a class="btn btn-primary" href="{{ path('site_new') }}">
+            <i class="icon-white icon-plus-sign"></i> Add a new site
+        </a>
+    {% endif %}
+{% endblock %}

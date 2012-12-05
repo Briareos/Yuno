@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity repository-class="Yuno\MainBundle\Entity\BannerGroupRepository" name="Yuno\MainBundle\Entity\BannerGroup" table="banner_group">
+        <named-queries>
+            <named-query name="findByName" query="Select g From MainBundle:BannerGroup g Where g.name = :name"/>
+            <named-query name="countBannersExcept" query="Select Count(g.id) From MainBundle:BannerGroup g Left Join g.banners b Where b != :banner And g = :group"/>
+            <named-query name="findAllByCampaignOrUser" query="Select bg, b, s From MainBundle:BannerGroup bg Left Join bg.banners b Left Join b.site s Left Join bg.campaignGroups cg Left Join cg.campaign c Where (s.user = :user) Or (s.user Is Null And c = :campaign) Order By bg.name Asc"/>
+        </named-queries>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="name" type="string" column="name" length="255" unique="true"/>
+        <one-to-many target-entity="Yuno\MainBundle\Entity\Banner" mapped-by="group" field="banners" index-by="id">
+        </one-to-many>
+        <one-to-many target-entity="Yuno\MainBundle\Entity\CampaignGroup" field="campaignGroups" mapped-by="bannerGroup" index-by="id"/>
+    </entity>
+</doctrine-mapping>

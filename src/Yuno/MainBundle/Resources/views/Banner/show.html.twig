@@ -1,0 +1,45 @@
+{% extends '::standard_layout.html.twig' %}
+{% from 'MainBundle::macros.html.twig' import entity_actions %}
+
+{% block title %}Banner at <em>{{ entity.group }}</em>{% endblock %}
+
+{% block content %}
+    {{ entity_actions(entity.id, 'banner') }}
+
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <th>Group</th>
+            <td><span class="label label-inverse">{{ entity.group }}</span></td>
+        </tr>
+        <tr>
+            <th>Site</th>
+            <td>{{ entity.site }}</td>
+        </tr>
+        <tr>
+            <th>Size</th>
+            <td>{{ entity.size }}</td>
+        </tr>
+        <tr>
+            <th>Category</th>
+            <td>{{ entity.site.getCategoryById(entity.category) }}</td>
+        </tr>
+        <tr>
+            <th>Code</th>
+            <td><code>{{ entity.code }}</code></td>
+        </tr>
+        <tr>
+            <th>Human URL</th>
+            <td>{{ entity.humanUrl }}</td>
+        </tr>
+        <tr>
+            <th>Bot URL</th>
+            <td>{{ entity.botUrl }}</td>
+        </tr>
+        <tr>
+            <th>Created at</th>
+            <td>{{ entity.createdAt|date('Y-m-d H:i:s') }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

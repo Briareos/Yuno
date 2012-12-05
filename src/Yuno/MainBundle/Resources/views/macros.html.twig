@@ -1,0 +1,71 @@
+{% macro form_actions(entity_id, route_base) %}
+    <div class="form-actions">
+        <button class="btn btn-primary" type="submit">
+            <i class="icon-white icon-ok-sign"></i> {{ entity_id ? 'Save changes' : 'Create' }}
+        </button>
+
+        <a class="btn" href="{{ path(route_base) }}">
+            <i class="icon-arrow-left"></i> Cancel (back to list)
+        </a>
+
+        {% if entity_id %}
+            <a class="btn btn-danger" href="{{ path(route_base~'_remove', { 'id': entity_id }) }}">
+                <i class="icon-white icon-remove-sign"></i> Delete
+            </a>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro entity_actions(entity_id, route_base, edit=true) %}
+    <div class="well">
+        <a class="btn" href="{{ path(route_base) }}">
+            <i class="icon-arrow-left"></i> Back to list
+        </a>
+        {% if edit %}
+            <a class="btn" href="{{ path(route_base~'_edit', { 'id': entity_id }) }}">
+                <i class="icon-edit"></i> Edit
+            </a>
+        {% endif %}
+        <a class="btn btn-danger" href="{{ path(route_base~'_remove', { 'id': entity_id }) }}">
+            <i class="icon-white icon-remove-sign"></i> Delete
+        </a>
+    </div>
+{% endmacro %}
+
+{% macro list_actions(entity, route_base) %}
+    <div class="btn-group">
+        <a class="btn btn-mini" href="{{ path(route_base~'_show', { 'id': entity.id }) }}"><i class="icon-eye-open"></i> View</a>
+        {% if is_granted('EDIT', entity) %}
+            <a class="btn btn-mini" href="{{ path(route_base~'_edit', { 'id': entity.id }) }}"><i class="icon-edit"></i> Edit</a>
+        {% endif %}
+        {% if is_granted('DELETE', entity) %}
+            <a class="btn btn-mini btn-danger" href="{{ path(route_base~'_remove', { 'id': entity.id }) }}"><i class="icon-white icon-remove"></i> Delete</a>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro clippy(text, id, fnc='clippy', bgcolor='ffffff') %}
+    {# https://github.com/localhost/clippy #}
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+            width="10"
+            height="10"
+            id="clippy" >
+        <param name="movie" value="{{ asset('bundles/main/clippy.swf') }}"/>
+        <param name="allowScriptAccess" value="always" />
+        <param name="quality" value="high" />
+        <param name="scale" value="noscale" />
+        <param NAME="FlashVars" value="text={{ text }}&fnc={{ fnc }}&id={{ id }}">
+        <param name="bgcolor" value="{{ bgcolor }}">
+        <embed src="{{ asset('bundles/main/clippy.swf') }}"
+               width="10"
+               height="10"
+               name="clippy"
+               quality="high"
+               allowScriptAccess="always"
+               type="application/x-shockwave-flash"
+               pluginspage="http://www.macromedia.com/go/getflashplayer"
+               FlashVars="text={{ text }}&fnc={{ fnc }}&id={{ id }}"
+               bgcolor="{{ bgcolor }}"
+                />
+    </object>
+{% endmacro %}

@@ -1,0 +1,91 @@
+jms_security_extra:
+    secure_all_services: false
+    expressions: true
+    voters:
+        disable_authenticated:  false
+        disable_role:           false
+        disable_acl:            true
+
+security:
+    encoders:
+        Yuno\MainBundle\Entity\User: sha512
+
+    role_hierarchy:
+        # Domain-specific
+        ROLE_SUPER_ADMIN:       [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_ADMIN:
+        # Entity-specific
+        # User
+        ROLE_USER_CREATE:
+        ROLE_USER_LIST:
+        ROLE_USER_EDIT:
+        ROLE_USER_DELETE:
+        # Site
+        ROLE_SITE_CREATE:
+        ROLE_SITE_LIST_ALL:     [ROLE_SITE_LIST_OWN]
+        ROLE_SITE_LIST_OWN:
+        ROLE_SITE_EDIT_ALL:     [ROLE_SITE_EDIT_OWN]
+        ROLE_SITE_EDIT_OWN:
+        ROLE_SITE_DELETE_ALL:   [ROLE_SITE_DELETE_OWN]
+        ROLE_SITE_DELETE_OWN:
+        # Banner
+        ROLE_BANNER_CREATE:
+        ROLE_BANNER_LIST_ALL:   [ROLE_BANNER_LIST_OWN]
+        ROLE_BANNER_LIST_OWN:
+        ROLE_BANNER_EDIT_ALL:   [ROLE_BANNER_EDIT_OWN]
+        ROLE_BANNER_EDIT_OWN:
+        ROLE_BANNER_DELETE_ALL: [ROLE_BANNER_DELETE_OWN]
+        ROLE_BANNER_DELETE_OWN:
+        # Campaign
+        ROLE_CAMPAIGN_CREATE:
+        ROLE_CAMPAIGN_LIST_ALL: [ROLE_CAMPAIGN_LIST_OWN]
+        ROLE_CAMPAIGN_LIST_OWN:
+        ROLE_CAMPAIGN_EDIT_ALL: [ROLE_CAMPAIGN_EDIT_OWN]
+        ROLE_CAMPAIGN_EDIT_OWN:
+        ROLE_CAMPAIGN_DELETE_ALL:   [ROLE_CAMPAIGN_DELETE_OWN]
+        ROLE_CAMPAIGN_DELETE_OWN:
+        # Click
+        ROLE_CLICK_LIST_ALL:    [ROLE_CLICK_LIST_OWN]
+        ROLE_CLICK_LIST_OWN:
+
+    providers:
+        default_database:
+            entity: { class: Yuno\MainBundle\Entity\User, property: username }
+
+    firewalls:
+        dev:
+            pattern:    ^/(_(profiler|wdt)|css|images|js)/
+            security:   false
+
+        yuno_control_center:
+            pattern:            ^/yuno-control-center/
+            form_login:
+                default_target_path: /yuno-control-center/dashboard
+                username_parameter: username
+                password_parameter: password
+                check_path:     /yuno-control-center/login_check
+                login_path:     /yuno-control-center/login
+                post_only:      true
+                intention:      authenticate
+                csrf_parameter: _token
+                csrf_provider:  form.csrf_provider
+            remember_me:
+                remember_me_parameter: remember_me
+                key:            %secret%
+                path:           /
+                lifetime:       86400
+                domain:         ~
+            logout:
+                path:           /yuno-control-center/logout
+                target:         /
+                csrf_parameter: _token
+                csrf_provider:  form.csrf_provider
+            anonymous: ~
+
+        main:
+            pattern:    ^/
+            anonymous:  ~
+
+    access_control:
+        - { path: ^/yuno-control-center/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/yuno-control-center/, roles: ROLE_ADMIN }
