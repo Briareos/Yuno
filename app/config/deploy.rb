@@ -48,9 +48,9 @@ task :make_logs_writable do
 end
 
 
-after "deploy:setup", "upload_parameters"
-after "deploy", "make_cache_writable"
-after "deploy", "make_logs_writable"
+# after "deploy:setup", "upload_parameters"
+# after "deploy", "make_cache_writable"
+# after "deploy", "make_logs_writable"
 
 # setfacl -R -m u:apache:rwx -m u:cooleryc:rwx current/app/cache shared/app/logs shared/web/uploads
 # setfacl -dR -m u:apache:rwx -m u:cooleryc:rwx current/app/cache shared/app/logs shared/web/uploads
