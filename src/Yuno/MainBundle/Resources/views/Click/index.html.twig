@@ -56,59 +56,64 @@
         {% endif %}
     </ul>
 
-    <table class="table table-bordered">
+    <table style="table-layout: fixed" class="table table-bordered table-striped">
         <thead>
         <tr>
-            <th>Created at</th>
+            <th>Banner</th>
+            <th>Time</th>
             <th>Referrer</th>
             <th>IP</th>
             <th>City</th>
-            <th>Country</th>
-            <th>Region</th>
-            <th>Continent</th>
-            <th>Useragent</th>
-            <th>Blocked</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-            <th>Id</th>
-            <th>Actions</th>
+            <th style="width: 56px">Country</th>
+            <th>User agent</th>
+            <th>Status</th>
         </tr>
         </thead>
         <tbody>
         {% if entities|length %}
             {% for entity in entities %}
                 <tr>
-                    <td><a href="{{ path('click_show', { 'id': entity.id }) }}">{{ entity.createdAt|localizeddate('medium','medium',user.locale) }}</a></td>
-                    <td>{{ entity.referrer }}</td>
+                    <td><span class="label label-inverse">{{ entity.banner.group }}</span></td>
+                    <td title="Campaign timezone: {{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', entity.campaign.timezone) }}">
+                        {{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}
+                        <br>
+                        <span class="muted">{{ entity.createdAt|dateage }} ago</span>
+                    </td>
+                    <td style="overflow: hidden; text-overflow: ellipsis;">{{ entity.referrer }}</td>
                     <td>{{ entity.ip }}</td>
-                    <td>{{ entity.city }}</td>
+                    <td>{{ entity.city }}{{ entity.region is not empty and entity.country in ['US','CA'] ? ', '~entity.region }}</td>
                     <td>{{ entity.country }}</td>
-                    <td>{{ entity.region }}</td>
-                    <td>{{ entity.continent }}</td>
-                    <td style="overflow: hidden; text-overflow: ellipsis;">{{ entity.userAgent }}</td>
-                    <td>{{ entity.blocked }}</td>
-                    <td>{{ entity.latitude }}</td>
-                    <td>{{ entity.longitude }}</td>
-                    <td>{{ entity.id }}</td>
+                    <td style="overflow: hidden; text-overflow: ellipsis;">
+                        {{ entity.userAgent }}
+                    </td>
                     <td>
+                        {% set logs %}
                         <ul>
-                            <li>
-                                <a href="{{ path('click_show', { 'id': entity.id }) }}">show</a>
-                            </li>
+                            {% for log in entity.log %}
+                                <li>{{ log }}</li>
+                            {% endfor %}
                         </ul>
+                        {% endset %}
+                        <span style="cursor: pointer;" class="popover-me" data-html="true" data-title="Detailed click log" data-content="{{ logs }}" data-placement="left">
+                        {% if entity.blocked is empty %}
+                            <span class="label label-info">OK</span>
+                        {% else %}
+                            <span class="label label-important">{{ statuses[entity.blocked] }}</span>
+                        {% endif %}
+                        </span>
                     </td>
                 </tr>
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="13">No clicks captured.</td>
+                <td colspan="8">No clicks captured.</td>
             </tr>
         {% endif %}
         </tbody>
         {% if paginator is defined %}
             <tfoot>
             <tr>
-                <td colspan="13">
+                <td colspan="8">
                     {% include 'MainBundle::pagination.html.twig' %}
                 </td>
             </tr>

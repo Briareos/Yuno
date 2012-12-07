@@ -4,6 +4,7 @@ namespace Yuno\MainBundle\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Yuno\MainBundle\Click\Filter;
 use Symfony\Component\HttpFoundation\Request;
 use Yuno\MainBundle\Paginator\PaginatorHelper;
 use DoctrineExtensions\Paginate\Paginate;
@@ -145,6 +146,7 @@ class ClickController extends Controller
         $clicks = $clicksQuery->execute();
 
         return array(
+            'statuses'=>Filter::getStatuses(),
             'entities' => $clicks,
             'click_users' => $clickUsers,
             'selected_click_site' => $site,

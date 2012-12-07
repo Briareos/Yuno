@@ -26,21 +26,21 @@ class Filter
     const BLOCK_NO_ACTIVE_SITES = 16;
     const PASS = null;
 
-    public static $block = array( //self::BLOCK_BANNED_CITY => 'banned city',
+    private static $statuses = array(
         self::BLOCK_BANNED_CITY => 'banned city',
         self::BLOCK_BANNED_REGION => 'banned region',
         self::BLOCK_BANNED_COUNTRY => 'banned country',
         // @TODO implement self::BLOCK_BANNED_IP => 'banned ip',
         self::BLOCK_DUPLICATE_IP => 'duplicate ip',
-        self::BLOCK_CAMPAIGN_GROUP_QUOTA_REACHED => 'campaign group quota reached',
+        self::BLOCK_CAMPAIGN_GROUP_QUOTA_REACHED => 'quota reached',
         // @TODO implement self::BLOCK_REQUEST_URI_SUSPICIOUS => 'request uri suspicious',
         self::BLOCK_HAS_COOKIES => 'has cookies',
         self::BLOCK_INVALID_REFERRER => 'invalid referrer',
         // @TODO implement self::BLOCK_BANNED_USER_AGENT => 'banned user agent',
         // @TODO implement self::BLOCK_PROXY_DETECTED => 'proxy detected',
-        self::BLOCK_LOCATION_NOT_RECOGNIZED => 'location not recognized',
+        self::BLOCK_LOCATION_NOT_RECOGNIZED => 'unknown location',
         // @TODO implement self::BLOCK_GROUP_NOT_ACTIVE => 'group not active',
-        self::BLOCK_CAMPAIGN_NOT_ACTIVE => 'campaign not active',
+        self::BLOCK_CAMPAIGN_NOT_ACTIVE => 'campaign inactive',
         self::BLOCK_OUT_OF_SCHEDULE => 'out of schedule',
         self::BLOCK_NO_ACTIVE_SITES => 'no active sites',
         self::PASS => 'passed',
@@ -55,6 +55,11 @@ class Filter
     private $em;
 
     private $time;
+
+    public static function getStatuses()
+    {
+        return static::$statuses;
+    }
 
     public function __construct(Request $request, CampaignGroup $campaignGroup, EntityManager $em, $time = 'now')
     {

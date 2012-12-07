@@ -102,12 +102,12 @@ class ClickListener
         }
 
         $banner = $campaignGroup->chooseAndGetBanner();
-        $click->setBanner($banner);
 
         $this->em->persist($click);
         $this->em->flush();
 
         if ($clickStatus === Filter::PASS) {
+            $click->setBanner($banner);
             $siteUrl = $banner->getSite()->getUrl();
             $url = rtrim($siteUrl, '/') . '/?' . $this->encoder->encrypt(
                 implode(
@@ -123,7 +123,11 @@ class ClickListener
                 )
             );
         } else {
-            $url = $banner->getBotUrl();
+            if ($banner !== null) {
+                $url = $banner->getBotUrl();
+            } else {
+                $url = 'http://' . $campaignGroup->getBannerGroup()->getName();
+            }
         }
 
         $event->setResponse(new RedirectResponse($url));

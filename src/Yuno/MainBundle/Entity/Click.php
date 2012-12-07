@@ -359,4 +359,14 @@ class Click
     {
         $this->log = $log;
     }
+
+    public function getBrowser()
+    {
+        if ($this->getUserAgent()) {
+            return get_browser($this->getUserAgent(), true);
+        }
+
+        return null;
+    }
 }
+

@@ -29,7 +29,7 @@
                         {% endfor %}
                     </ul>
                     {% endset %}
-                    <a href="#" onclick="return false" class="btn btn-mini popover-me" data-content="{{ user_roles }}" data-html="true" data-title="{{ entity }}'s permissions">View permissions</a>
+                    <button class="btn btn-mini popover-me" data-content="{{ user_roles }}" data-html="true" data-title="{{ entity }}'s permissions">View permissions</button>
                 </td>
                 <td>{% if entity.createdAt %}<span class="tooltip-me" data-title="{{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.createdAt|dateage }} ago</span>{% endif %}</td>
                 <td>{% if entity.lastLoginAt %}<span class="tooltip-me" data-title="{{ entity.lastLoginAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.lastLoginAt|dateage }} ago</span>{% endif %}</td>

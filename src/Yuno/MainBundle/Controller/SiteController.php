@@ -341,6 +341,37 @@ class SiteController extends Controller
     }
 
     /**
+     * @Route("/{id}/update-banners", name="site_update_banners")
+     * @Method("GET")
+     * @ParamConverter("site", class="MainBundle:Site")
+     * @SecureParam(name="site", permissions="EDIT")
+     */
+    public function updateBannersAction(Request $request, Site $site)
+    {
+        $communicator = new Communicator($site);
+        /** @var $banners \Yuno\MainBundle\Entity\Banner[] */
+        $banners = $this->em->getRepository('MainBundle:Banner')->findBy(array('site' => $site));
+        $bannerData = array();
+        foreach ($banners as $banner) {
+            $bannerData[$banner->getId()] = array(
+                'id' => $banner->getId(),
+                'code' => $banner->getCode(),
+                'category' => $banner->getCategory(),
+                'group' => $banner->getGroup()->getName(),
+                'size' => $banner->getSize(),
+            );
+        }
+        $status = $communicator->setBanners($bannerData);
+        if ($status) {
+            $this->session->getFlashBag()->add('success', sprintf("%s banners synchronized.", count($banners)));
+        } else {
+            $this->session->getFlashBag()->add('error', sprintf("There was an error while trying to synchronize banners. Does the secret key match? Is the site URL correct?."));
+        }
+
+        return $this->redirect($request->server->get('HTTP_REFERER', $this->generateUrl('site')));
+    }
+
+    /**
      * @Route("/{id}/loopback/search-engine", name="site_loopback_search")
      * @Method("GET")
      * @Template("MainBundle:Site:loopback.html.twig")

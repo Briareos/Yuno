@@ -23,6 +23,14 @@
             <td>{{ entity.user }}</td>
         </tr>
         <tr>
+            <th>Banners
+            {% if is_granted('EDIT', entity) %}
+                <a class="btn btn-primary btn-small" href="{{ path('site_update_banners', { 'id': entity.id }) }}">Synchronize banners</a>
+                {% endif %}
+            </th>
+            <td>{{ entity.banners|length }}</td>
+        </tr>
+        <tr>
             <th>Secret</th>
             <td>
                 {% if entity.secret %}
