@@ -102,9 +102,9 @@ class ClickListener
         }
 
         $banner = $campaignGroup->chooseAndGetBanner();
+        $click->setBanner($banner);
 
         if ($clickStatus === Filter::PASS) {
-            $click->setBanner($banner);
             $siteUrl = $banner->getSite()->getUrl();
             $url = rtrim($siteUrl, '/') . '/?' . $this->encoder->encrypt(
                 implode(
