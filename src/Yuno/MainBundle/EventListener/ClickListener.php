@@ -103,9 +103,6 @@ class ClickListener
 
         $banner = $campaignGroup->chooseAndGetBanner();
 
-        $this->em->persist($click);
-        $this->em->flush();
-
         if ($clickStatus === Filter::PASS) {
             $click->setBanner($banner);
             $siteUrl = $banner->getSite()->getUrl();
@@ -129,6 +126,8 @@ class ClickListener
                 $url = 'http://' . $campaignGroup->getBannerGroup()->getName();
             }
         }
+        $this->em->persist($click);
+        $this->em->flush();
 
         $event->setResponse(new RedirectResponse($url));
     }
