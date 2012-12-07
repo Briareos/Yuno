@@ -17,7 +17,7 @@ class ClickRepository extends EntityRepository
         $result = $this->getEntityManager()
           ->getConnection()
           ->executeQuery(
-            'SELECT b.id, COUNT(c.id) As total FROM click c INNER JOIN banner b ON c.banner_id = b.id WHERE c.campaign_id = :campaign_id AND c.createdAt BETWEEN :date_start AND :date_end GROUP BY b.id',
+            'SELECT b.id, COUNT(c.id) As total FROM click c INNER JOIN banner b ON c.banner_id = b.id WHERE c.campaign_id = :campaign_id AND c.blocked IS NULL AND c.createdAt BETWEEN :date_start AND :date_end GROUP BY b.id',
             array(
                 'campaign_id' => $campaign->getId(),
                 'date_start' => $dateStart->format('Y-m-d H:i:s'),
