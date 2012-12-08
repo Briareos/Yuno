@@ -55,7 +55,7 @@ class BannerController extends Controller
      * @Route("/", name="banner")
      * @Method("GET")
      * @Template("MainBundle:Banner:index.html.twig")
-     * @Secure(roles="ROLE_SITE_LIST_OWN")
+     * @Secure(roles="ROLE_BANNER_LIST_OWN")
      */
     public function indexAction()
     {
@@ -76,7 +76,7 @@ class BannerController extends Controller
      * @Method("GET")
      * @Template("MainBundle:Banner:index.html.twig")
      * @ParamConverter("site", class="MainBundle:Site")
-     * @Secure(roles="ROLE_SITE_LIST_ALL")
+     * @Secure(roles="ROLE_BANNER_LIST_ALL")
      */
     public function siteAction(Site $site, Request $request)
     {
@@ -92,7 +92,7 @@ class BannerController extends Controller
      * @Route("/own", name="banner_own")
      * @Method("GET")
      * @Template("MainBundle:Banner:index.html.twig")
-     * @Secure(roles="ROLE_SITE_LIST_OWN")
+     * @Secure(roles="ROLE_BANNER_LIST_OWN")
      */
     public function ownAction(Request $request)
     {
@@ -112,7 +112,7 @@ class BannerController extends Controller
      * @Method("GET")
      * @Template("MainBundle:Banner:index.html.twig")
      * @ParamConverter("user", class="MainBundle:User")
-     * @Secure(roles="ROLE_SITE_LIST_ALL")
+     * @Secure(roles="ROLE_BANNER_LIST_ALL")
      */
     public function userAction(Request $request, User $user)
     {
@@ -128,7 +128,7 @@ class BannerController extends Controller
      * @Route("/all", name="banner_all")
      * @Method("GET")
      * @Template("MainBundle:Banner:index.html.twig")
-     * @Secure(roles="ROLE_SITE_LIST_ALL")
+     * @Secure(roles="ROLE_BANNER_LIST_ALL")
      */
     public function allAction(Request $request)
     {
@@ -168,7 +168,7 @@ class BannerController extends Controller
      * @Route("/", name="banner_create")
      * @Method("POST")
      * @Template("MainBundle:Banner:new.html.twig")
-     * @Secure(roles="ROLE_SITE_CREATE")
+     * @Secure(roles="ROLE_BANNER_CREATE")
      */
     public function createAction(Request $request)
     {
@@ -199,7 +199,7 @@ class BannerController extends Controller
      * @Route("/new", name="banner_new")
      * @Method("GET")
      * @Template()
-     * @Secure(roles="ROLE_SITE_CREATE")
+     * @Secure(roles="ROLE_BANNER_CREATE")
      */
     public function newAction()
     {

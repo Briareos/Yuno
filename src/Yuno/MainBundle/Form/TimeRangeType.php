@@ -20,7 +20,7 @@ class TimeRangeType extends AbstractType
             'startTime',
             'text',
             array(
-                'data' => '08:00:00',
+                //'empty_data' => '08:00:00',
                 'constraints' => array(
                     new \Symfony\Component\Validator\Constraints\Time(),
                     new \Symfony\Component\Validator\Constraints\NotBlank(),
@@ -41,7 +41,7 @@ class TimeRangeType extends AbstractType
             'endTime',
             'text',
             array(
-                'data' => '16:00:00',
+                //'empty_data' => '16:00:00',
                 'constraints' => array(
                     new \Symfony\Component\Validator\Constraints\Time(),
                     new \Symfony\Component\Validator\Constraints\NotBlank(),
