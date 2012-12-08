@@ -48,7 +48,7 @@ class SecurityVoter implements VoterInterface
             return self::ACCESS_ABSTAIN;
         }
 
-        if ($object instanceof Site || $object instanceof Banner || $object instanceof Campaign || $object instanceof Click) {
+        if ($object instanceof Site || $object instanceof Banner || $object instanceof Campaign || $object instanceof Click || $object instanceof User) {
             // Just so our IDE doesn't complain.
             $base = '';
             $ownerId = 0;
@@ -57,13 +57,16 @@ class SecurityVoter implements VoterInterface
                 $ownerId = $object->getUser()->getId();
             } elseif ($object instanceof Banner) {
                 $base = 'BANNER';
-                $ownerId = $object->getSite()->getId();
+                $ownerId = $object->getSite()->getUser()->getId();
             } elseif ($object instanceof Campaign) {
                 $base = 'CAMPAIGN';
                 $ownerId = $object->getUser()->getId();
             } elseif ($object instanceof Click) {
                 $base = 'CLICK';
                 $ownerId = $object->getCampaign()->getUser()->getId();
+            } elseif ($object instanceof User) {
+                $base = 'USER';
+                $ownerId = $object->getId();
             }
             foreach ($attributes as $attribute) {
                 if (!$this->canAccess($attribute, $base, $ownerId, $token->getUser(), $object, $roles)) {
