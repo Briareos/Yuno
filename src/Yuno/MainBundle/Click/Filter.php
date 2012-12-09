@@ -261,8 +261,9 @@ class Filter
 
     private function isCampaignGroupQuotaReached()
     {
-        $count = $this->em->createQuery('Select Count(c.id) From MainBundle:Click c Where c.createdAt > :date And c.blocked Is Null')
+        $count = $this->em->createQuery('Select Count(c.id) From MainBundle:Click c Where c.createdAt > :date And c.blocked Is Null And c.campaign = :campaign')
           ->setParameter('date', $this->campaignGroup->getCampaign()->getPreviousMidnight())
+          ->setParameter('campaign', $this->campaignGroup->getCampaign())
           ->getSingleScalarResult();
 
         if ($count >= $this->campaignGroup->getClickLimit()) {
