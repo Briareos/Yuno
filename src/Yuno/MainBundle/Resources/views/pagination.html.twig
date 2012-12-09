@@ -1,7 +1,7 @@
 <div class="pagination pagination-centered">
     <ul>
         {% if paginator.previous is defined %}
-            <li><a href="{{ path(path, route_params|merge({'page':paginator.previous})) }}">«</a></li>
+            <li><a href="{{ path(route, route_params|merge({'page':paginator.previous})) }}">«</a></li>
         {% else %}
             <li class="disabled"><a>«</a></li>
         {% endif %}
