@@ -401,10 +401,24 @@ class CampaignController extends Controller
             }
         }
 
+        $filterData = array();
+        $filterForm = $this->getCampaignFilterForm($campaign->getTimezone());
+        if ($request->query->getInt('filter', 0) === 1) {
+            $filterForm->bind($request);
+            $filterData = $filterForm->getData();
+        }
+
         /** @var $clickRepository \Yuno\MainBundle\Entity\ClickRepository */
         $clickRepository = $this->em->getRepository('MainBundle:Click');
-        $dateStart = $campaign->getPreviousMidnight();
-        $dateEnd = $campaign->getNextMidnight();
+        if (empty($filterData['date'])) {
+            $dateStart = $campaign->getPreviousMidnight();
+            $dateEnd = $campaign->getNextMidnight();
+        } else {
+            $dateStart = clone $filterData['date'];
+            $dateStart->modify('midnight');
+            $dateEnd = clone $filterData['date'];
+            $dateEnd->modify('midnight +1 day');
+        }
         $bannerClickCount = $clickRepository->getCountsForCampaignByBanner($campaign, $dateStart, $dateEnd);
         $groupClickCount = $clickRepository->getCountsForCampaignByGroup($campaign, $dateStart, $dateEnd);
 
@@ -424,6 +438,7 @@ class CampaignController extends Controller
         return array(
             'entity' => $campaign,
             'form' => $form->createView(),
+            'filter_form' => $filterForm->createView(),
             'campaign_groups' => $campaignGroups,
             'campaign_group_urls' => $campaignGroupUrls,
             'banner_click_count' => $bannerClickCount,
@@ -605,13 +620,14 @@ class CampaignController extends Controller
                 $filter = new Filter($clickRequest, $data['campaignGroup'], $this->em, $data['time']);
                 $status = $filter->getStatus();
                 if ($status > 0) {
-                    $reason = Filter::$block[$status];
+                    $reason = Filter::getStatuses()[$status];
                 } else {
                     $status = 0;
                 }
                 $log = $filter->getLog();
             }
         }
+
         return array(
             'entity' => $campaign,
             'form' => $form->createView(),
@@ -619,5 +635,41 @@ class CampaignController extends Controller
             'log' => $log,
             'reason' => $reason,
         );
+    }
+
+    public function getCampaignFilterForm($timezone)
+    {
+        $form = $this->formFactory->createNamed(
+            '',
+            'form',
+            null,
+            array()
+        );
+        $form->add(
+            $this->formFactory->createNamed(
+                'date',
+                'date',
+                new \DateTime('now'),
+                array(
+                    'constraints' => array(
+                        new \Symfony\Component\Validator\Constraints\Date(),
+                    ),
+                    'by_reference' => false,
+                    'attr' => array(
+                        'class' => 'datepicker',
+                    ),
+                    'data_timezone' => $timezone,
+                )
+            )
+        );
+        $form->add(
+            $this->formFactory->createNamed(
+                'filter',
+                'hidden',
+                1
+            )
+        );
+
+        return $form;
     }
 }

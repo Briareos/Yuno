@@ -6,6 +6,12 @@
 {% block content %}
     {% include 'MainBundle:Campaign:nav.html.twig' %}
 
+    <form method="get" {{ form_enctype(filter_form) }}>
+        {{ form_widget(filter_form) }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{{ path(route, route_params) }}">Reset</a>
+    </form>
+
     <p>
         The counter resets in <strong class="tooltip-me" data-title="{{ entity.getNextMidnight()|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.getNextMidnight()|dateage }}</strong>, at midnight in accordance to campaign's timezone (<em>{{ entity.timezone }}</em>).
     </p>
