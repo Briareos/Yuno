@@ -356,6 +356,8 @@ class SiteController extends Controller
             $bannerData[$banner->getId()] = array(
                 'id' => $banner->getId(),
                 'code' => $banner->getCode(),
+                'human' => $banner->getHumanUrl(),
+                'bot' => $banner->getBotUrl(),
                 'category' => $banner->getCategory(),
                 'group' => $banner->getGroup()->getName(),
                 'size' => $banner->getSize(),
