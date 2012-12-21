@@ -14,3 +14,4 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
     encryption_key:    kU$4nAg1
+    yuno_pages:        C:/Users/Fox/yuno_pages
