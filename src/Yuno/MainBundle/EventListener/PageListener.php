@@ -21,12 +21,25 @@ class PageListener
         if ($uri === '/') {
             $uri = '/home.php';
         }
-        if (!preg_match('{^/[a-z0-9]+\.(?:php|css|js)$}', $uri)) {
+        if (!preg_match('{^/[a-z0-9-]+\.(?:php|css|js)$}', $uri) && !preg_match('{^/images/[a-z0-9-]+\.(?:jpg|jpeg|png|gif)$}', $uri)) {
             return;
         }
         $file = rtrim($this->pages, '/') . $uri;
         if (!file_exists($file)) {
             return;
+        }
+        $contentType = 'text/html';
+        $extension = pathinfo($file, PATHINFO_EXTENSION);
+        if ($extension === 'css') {
+            $contentType = 'text/css';
+        } elseif ($extension === 'js') {
+            $contentType = 'text/javascript';
+        } elseif ($extension === 'jpg' || $extension === 'jpeg') {
+            $contentType = 'image/jpeg';
+        } elseif ($extension === 'png') {
+            $contentType = 'image/png';
+        } elseif ($extension === 'gif') {
+            $contentType = 'image/gif';
         }
         $cwd = getcwd();
         chdir($this->pages);
@@ -35,7 +48,9 @@ class PageListener
         $responseHtml = ob_get_contents();
         ob_end_clean();
         chdir($cwd);
-        $response = new Response($responseHtml);
+        $response = new Response($responseHtml, 200, array(
+            'Content-Type' => $contentType,
+        ));
         $event->setResponse($response);
     }
 }
