@@ -21,7 +21,7 @@ class PageListener
         if ($uri === '/') {
             $uri = '/home.php';
         }
-        if (!preg_match('{^/[a-z0-9]+\.php$}', $uri)) {
+        if (!preg_match('{^/[a-z0-9]+\.(?:php|css|js)$}', $uri)) {
             return;
         }
         $file = rtrim($this->pages, '/') . $uri;
