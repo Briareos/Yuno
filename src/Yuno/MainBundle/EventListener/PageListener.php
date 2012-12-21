@@ -21,7 +21,7 @@ class PageListener
         if ($uri === '/') {
             $uri = '/home.php';
         }
-        if (!preg_match('{^/[a-z0-9-]+\.(?:php|css|js)$}', $uri) && !preg_match('{^/images/[a-z0-9-]+\.(?:jpg|jpeg|png|gif)$}', $uri)) {
+        if (!preg_match('{^/[a-z0-9_-]+\.(?:php|css|js)$}', $uri) && !preg_match('{^/images/[a-z0-9_-]+\.(?:jpg|jpeg|png|gif)$}', $uri)) {
             return;
         }
         $file = rtrim($this->pages, '/') . $uri;
@@ -41,14 +41,18 @@ class PageListener
         } elseif ($extension === 'gif') {
             $contentType = 'image/gif';
         }
-        $cwd = getcwd();
-        chdir($this->pages);
-        ob_start();
-        include $file;
-        $responseHtml = ob_get_contents();
-        ob_end_clean();
-        chdir($cwd);
-        $response = new Response($responseHtml, 200, array(
+        if ($extension === 'php') {
+            $cwd = getcwd();
+            chdir($this->pages);
+            ob_start();
+            include $file;
+            $responseContent = ob_get_contents();
+            ob_end_clean();
+            chdir($cwd);
+        } else {
+            $responseContent = file_get_contents($file);
+        }
+        $response = new Response($responseContent, 200, array(
             'Content-Type' => $contentType,
         ));
         $event->setResponse($response);
