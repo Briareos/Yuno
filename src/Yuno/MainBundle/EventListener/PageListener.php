@@ -25,6 +25,9 @@ class PageListener
             return;
         }
         $file = rtrim($this->pages, '/') . $uri;
+        if (!file_exists($file)) {
+            return;
+        }
         $cwd = getcwd();
         chdir($this->pages);
         ob_start();
