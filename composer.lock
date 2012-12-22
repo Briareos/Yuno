@@ -1,5 +1,5 @@
 {
-    "hash": "4270b6fc1c6e1d7fa62f93be032ba9df",
+    "hash": "ad2b8047f71fafa9e5ef36a755a4f06c",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -153,19 +153,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal",
-                "reference": "00f9575d24a15931c2ccfafd888b3d1d0bb5bd03"
+                "reference": "8d0bd31ec311b50b5f62c3da6f266da83da25995"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/dbal/archive/00f9575d24a15931c2ccfafd888b3d1d0bb5bd03.zip",
-                "reference": "00f9575d24a15931c2ccfafd888b3d1d0bb5bd03",
+                "url": "https://github.com/doctrine/dbal/archive/8d0bd31ec311b50b5f62c3da6f266da83da25995.zip",
+                "reference": "8d0bd31ec311b50b5f62c3da6f266da83da25995",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
                 "doctrine/common": "2.3.*"
             },
-            "time": "2012-12-17 15:35:54",
+            "time": "2012-12-22 11:34:26",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -287,12 +287,12 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/doctrine/doctrine2.git",
-                "reference": "6d898753065056d178039844d80569f74b8fe6c6"
+                "reference": "b68c6b3d2dafea2cb476c70427b691bb36c6294d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/doctrine/doctrine2/archive/6d898753065056d178039844d80569f74b8fe6c6.zip",
-                "reference": "6d898753065056d178039844d80569f74b8fe6c6",
+                "url": "https://github.com/doctrine/doctrine2/archive/b68c6b3d2dafea2cb476c70427b691bb36c6294d.zip",
+                "reference": "b68c6b3d2dafea2cb476c70427b691bb36c6294d",
                 "shasum": ""
             },
             "require": {
@@ -304,7 +304,7 @@
             "suggest": {
                 "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
             },
-            "time": "2012-12-16 12:00:27",
+            "time": "2012-12-22 11:46:06",
             "bin": [
                 "bin/doctrine",
                 "bin/doctrine.php"
@@ -1670,7 +1670,6 @@
     "stability-flags": {
         "twig/extensions": 20,
         "kriswallsmith/assetic": 20,
-        "mopa/bootstrap-bundle": 20,
         "stof/doctrine-extensions-bundle": 20,
         "craue/twigextensions-bundle": 20,
         "uco/twig-extensions-bundle": 20

@@ -21,7 +21,7 @@
         "jms/security-extra-bundle":"1.2.*",
         "jms/di-extra-bundle":"1.1.*",
         "kriswallsmith/assetic":"1.1.*@dev",
-        "mopa/bootstrap-bundle":"dev-master",
+        "mopa/bootstrap-bundle":"2.1.*",
         "zendframework/zend-paginator":"2.0.*",
         "stof/doctrine-extensions-bundle":"dev-master",
         "beberlei/DoctrineExtensions":"v0.1",

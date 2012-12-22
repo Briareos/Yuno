@@ -33,6 +33,7 @@ class ReferrerMatcherType extends AbstractType
                 'attr' => array(
                     'class' => '',
                 ),
+                'label_render' => false,
                 'widget_controls' => false,
                 'widget_control_group' => false,
             )
@@ -51,6 +52,7 @@ class ReferrerMatcherType extends AbstractType
                 'attr' => array(
                     'class' => '',
                 ),
+                'label_render' => false,
                 'widget_controls' => false,
                 'widget_control_group' => false,
             )

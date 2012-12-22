@@ -33,6 +33,7 @@ class TimeRangeType extends AbstractType
                 'attr' => array(
                     'class' => 'timepicker input-mini',
                 ),
+                'label_render' => false,
                 'widget_controls' => false,
                 'widget_control_group' => false,
             )
@@ -54,6 +55,7 @@ class TimeRangeType extends AbstractType
                 'attr' => array(
                     'class' => 'timepicker input-mini',
                 ),
+                'label_render' => false,
                 'widget_controls' => false,
                 'widget_control_group' => false,
             )

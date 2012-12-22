@@ -6,8 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Yuno\MainBundle\Entity\Campaign;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class CityFilterType extends AbstractType
@@ -33,6 +31,7 @@ class CityFilterType extends AbstractType
                     'data-placeholder' => "Country",
                 ),
                 'required' => true,
+                'label_render' => false,
                 'widget_control_group' => false,
             )
         );
@@ -45,6 +44,7 @@ class CityFilterType extends AbstractType
                     new \Symfony\Component\Validator\Constraints\NotBlank(),
                 ),
                 'widget_prefix' => "City",
+                'label_render' => false,
                 'widget_control_group' => false,
             )
         );
@@ -60,6 +60,7 @@ class CityFilterType extends AbstractType
                     'data-placeholder' => "State/region",
                 ),
                 'widget_prefix' => "State/region (US/CA only)",
+                'label_render' => false,
                 'widget_control_group' => false,
             )
         );
