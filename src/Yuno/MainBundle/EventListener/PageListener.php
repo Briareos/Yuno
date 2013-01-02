@@ -21,10 +21,11 @@ class PageListener
         if ($uri === '/') {
             $uri = '/home.php';
         }
-        if (!preg_match('{^/[a-z0-9_-]+\.(?:php|css|js)$}', $uri)
-          && !preg_match('{^/images/[a-z0-9_/-]+\.(?:jpg|jpeg|png|gif)$}', $uri)
-          && !preg_match('{^/style/[a-z0-9_-]+\.css$}', $uri)
-          && !preg_match('{^/js/[a-z0-9_-]+\.js$}', $uri)
+        if (!preg_match('{^/[a-z0-9_-]+\.(?:php|css|js)$}i', $uri)
+          && !preg_match('{^/images/[a-z0-9_/-]+\.(?:jpg|jpeg|png|gif)$}i', $uri)
+          && !preg_match('{^/style/[a-z0-9_-]+\.css$}i', $uri)
+          && !preg_match('{^/js/[a-z0-9_-]+\.js$}i', $uri)
+          && !preg_match('{^/[a-z0-9]+\.xml$}i', $uri)
         ) {
             return;
         }
@@ -44,6 +45,8 @@ class PageListener
             $contentType = 'image/png';
         } elseif ($extension === 'gif') {
             $contentType = 'image/gif';
+        } elseif ($extension === 'xml') {
+            $contentType = 'application/xml';
         }
         if ($extension === 'php') {
             $cwd = getcwd();
