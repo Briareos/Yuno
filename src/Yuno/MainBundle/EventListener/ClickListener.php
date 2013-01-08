@@ -3,6 +3,7 @@
 namespace Yuno\MainBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Yuno\MainBundle\Entity\Click;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -129,6 +130,21 @@ class ClickListener
         $this->em->persist($click);
         $this->em->flush();
 
-        $event->setResponse(new RedirectResponse($url));
+        // $response = new RedirectResponse($url);
+
+        if ($clickStatus === Filter::PASS) {
+            $method = 'post';
+        } else {
+            $method = 'get';
+        }
+
+        $responseText = <<<EOF
+<body onLoad="javascript:frmClickTracking.submit();">
+<form action="$url" method="$method" name="frmClickTracking">
+</form>
+EOF;
+
+        $response = new Response($responseText);
+        $event->setResponse($response);
     }
 }
