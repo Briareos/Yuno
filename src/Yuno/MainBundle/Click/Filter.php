@@ -81,7 +81,6 @@ class Filter
 
     public function getStatus()
     {
-        return static::PASS;
         if ($this->hasCookies()) {
             return static::BLOCK_HAS_COOKIES;
         }
