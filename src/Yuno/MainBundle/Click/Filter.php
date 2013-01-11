@@ -81,6 +81,7 @@ class Filter
 
     public function getStatus()
     {
+        return static::PASS;
         if ($this->hasCookies()) {
             return static::BLOCK_HAS_COOKIES;
         }
@@ -157,7 +158,7 @@ class Filter
         if (
             $this->request->server->get('GEOIP_CONTINENT_CODE')
             && $this->request->server->get('GEOIP_COUNTRY_CODE')
-            //&& $this->request->server->get('GEOIP_CITY')
+            && $this->request->server->get('GEOIP_CITY')
         ) {
             $this->addLog('Location check: Location info recognized.');
 
