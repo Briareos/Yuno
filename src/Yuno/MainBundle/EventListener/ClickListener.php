@@ -130,21 +130,13 @@ class ClickListener
         $this->em->persist($click);
         $this->em->flush();
 
-        // $response = new RedirectResponse($url);
-
         if ($clickStatus === Filter::PASS) {
-            $method = 'post';
+            $responseText = sprintf('<meta http-equiv="refresh" content="0;url=%s"/>', $url);
+            $response = new Response($responseText);
         } else {
-            $method = 'get';
+            $response = new RedirectResponse($url, 302);
         }
 
-        $responseText = <<<EOF
-<body onLoad="javascript:frmClickTracking.submit();">
-<form action="$url" method="$method" name="frmClickTracking">
-</form>
-EOF;
-
-        $response = new Response($responseText);
         $event->setResponse($response);
     }
 }
