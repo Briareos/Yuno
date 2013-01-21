@@ -131,10 +131,12 @@ class ClickListener
         $this->em->flush();
 
         if ($clickStatus === Filter::PASS) {
-            $responseText = sprintf('<meta http-equiv="refresh" content="0;url=%s"/>', $url);
-            $response = new Response($responseText);
+            $response = new RedirectResponse($url);
         } else {
-            $response = new RedirectResponse($url, 302);
+            $responseText = <<<EOF
+<meta http-equiv="refresh" content="0;url={$url}"/>
+EOF;
+            $response = new Response($responseText);
         }
 
         $event->setResponse($response);
