@@ -36,7 +36,7 @@ class Filter
         // @TODO implement self::BLOCK_REQUEST_URI_SUSPICIOUS => 'request uri suspicious',
         self::BLOCK_HAS_COOKIES => 'has cookies',
         self::BLOCK_INVALID_REFERRER => 'invalid referrer',
-        // @TODO implement self::BLOCK_BANNED_USER_AGENT => 'banned user agent',
+        self::BLOCK_BANNED_USER_AGENT => 'banned user agent',
         // @TODO implement self::BLOCK_PROXY_DETECTED => 'proxy detected',
         self::BLOCK_LOCATION_NOT_RECOGNIZED => 'unknown location',
         // @TODO implement self::BLOCK_GROUP_NOT_ACTIVE => 'group not active',
@@ -91,6 +91,10 @@ class Filter
 
         if ($this->isCampaignInactive()) {
             return static::BLOCK_CAMPAIGN_NOT_ACTIVE;
+        }
+
+        if ($this->isUserAgentBanned()) {
+            return static::BLOCK_BANNED_USER_AGENT;
         }
 
         if ($this->isCountryBanned()) {
@@ -157,7 +161,7 @@ class Filter
         if (
             $this->request->server->get('GEOIP_CONTINENT_CODE')
             && $this->request->server->get('GEOIP_COUNTRY_CODE')
-            //&& $this->request->server->get('GEOIP_CITY')
+            && $this->request->server->get('GEOIP_CITY')
         ) {
             $this->addLog('Location check: Location info recognized.');
 
@@ -228,8 +232,8 @@ class Filter
 
         foreach ($blacklistedCities as $blacklistedCity) {
             if ($blacklistedCity['country'] === $country
-              && $blacklistedCity['city'] === $city
-              && (($blacklistedCity['region'] !== 'US' && $blacklistedCity['region'] !== 'CA') || $blacklistedCity['region'] === $region)
+                && $blacklistedCity['city'] === $city
+                && (($blacklistedCity['region'] !== 'US' && $blacklistedCity['region'] !== 'CA') || $blacklistedCity['region'] === $region)
             ) {
                 $this->addLog(sprintf('City check: City "%s", (%s), "%s" is blacklisted.', $city, $region, $country));
 
@@ -245,10 +249,10 @@ class Filter
     {
         $days = 21;
         $duplicate = $this->em->createQuery('Select c.id From MainBundle:Click c Where c.createdAt > :date And c.ip = :ip')
-          ->setMaxResults(1)
-          ->setParameter('date', new \DateTime(sprintf('-%s days', $days)))
-          ->setParameter('ip', $this->request->server->get('REMOTE_ADDR'))
-          ->getOneOrNullResult();
+            ->setMaxResults(1)
+            ->setParameter('date', new \DateTime(sprintf('-%s days', $days)))
+            ->setParameter('ip', $this->request->server->get('REMOTE_ADDR'))
+            ->getOneOrNullResult();
         if ($duplicate) {
             $this->addLog(sprintf('Duplicate IP check: IP address has been logged in the last %s days.', $days));
 
@@ -262,9 +266,9 @@ class Filter
     private function isCampaignGroupQuotaReached()
     {
         $count = $this->em->createQuery('Select Count(c.id) From MainBundle:Click c Inner Join c.banner b Where c.createdAt > :date And c.blocked Is Null And b.group = :group')
-          ->setParameter('date', $this->campaignGroup->getCampaign()->getPreviousMidnight())
-          ->setParameter('group', $this->campaignGroup->getBannerGroup())
-          ->getSingleScalarResult();
+            ->setParameter('date', $this->campaignGroup->getCampaign()->getPreviousMidnight())
+            ->setParameter('group', $this->campaignGroup->getBannerGroup())
+            ->getSingleScalarResult();
 
         if ($count >= $this->campaignGroup->getClickLimit()) {
             $this->addLog(sprintf('Campaign group quota status: Campaign group quota already reached at %s clicks.', $this->campaignGroup->getClickLimit()));
@@ -349,5 +353,27 @@ class Filter
         $this->addLog('Banner checker: No active site banners found.');
 
         return true;
+    }
+
+    private function isUserAgentBanned()
+    {
+        $userAgent = $this->request->server->get('HTTP_USER_AGENT');
+        $bannedUserAgents = array(
+            'msnbot',
+            'bingbot',
+            'crawler',
+            'slurp',
+            'yahoo',
+        );
+        foreach ($bannedUserAgents as $bannedUserAgent) {
+            if (stripos($userAgent, $bannedUserAgent) !== false) {
+                $this->addLog(sprintf('User agent check: user agent is banned, matches filter "%s".', htmlentities($bannedUserAgent, ENT_QUOTES, 'UTF-8')));
+            }
+
+            return true;
+        }
+        $this->addLog('User agent check: user agent is not banned.');
+
+        return false;
     }
 }
