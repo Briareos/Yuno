@@ -368,9 +368,9 @@ class Filter
         foreach ($bannedUserAgents as $bannedUserAgent) {
             if (stripos($userAgent, $bannedUserAgent) !== false) {
                 $this->addLog(sprintf('User agent check: user agent is banned, matches filter "%s".', htmlentities($bannedUserAgent, ENT_QUOTES, 'UTF-8')));
-            }
 
-            return true;
+                return true;
+            }
         }
         $this->addLog('User agent check: user agent is not banned.');
 
