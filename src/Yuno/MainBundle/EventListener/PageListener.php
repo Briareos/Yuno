@@ -12,7 +12,7 @@ class PageListener
 
     function __construct($pages)
     {
-        $this->pages = $pages;
+        $this->pages = rtrim($pages, '/');
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -26,10 +26,11 @@ class PageListener
           && !preg_match('{^/(?:style|css)/[a-z0-9_-]+\.css$}i', $uri)
           && !preg_match('{^/js/[a-z0-9_-]+\.js$}i', $uri)
           && !preg_match('{^/[a-z0-9]+\.xml$}i', $uri)
+          && !(preg_match('{^/favicon\.ico}', $uri) && file_exists($this->pages . '/favicon.ico'))
         ) {
             return;
         }
-        $file = rtrim($this->pages, '/') . $uri;
+        $file = $this->pages . '/' . $uri;
         if (!file_exists($file)) {
             return;
         }
