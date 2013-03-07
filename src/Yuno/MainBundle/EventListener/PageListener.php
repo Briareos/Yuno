@@ -26,7 +26,7 @@ class PageListener
           && !preg_match('{^/(?:style|css)/[a-z0-9_-]+\.css$}i', $uri)
           && !preg_match('{^/js/[a-z0-9_-]+\.js$}i', $uri)
           && !preg_match('{^/[a-z0-9]+\.xml$}i', $uri)
-          && !(preg_match('{^/favicon\.ico}', $uri) && file_exists($this->pages . '/favicon.ico'))
+          && !(preg_match('{^/favicon\.(ico|png)$}', $uri, $matches) && file_exists($this->pages . $matches[0]))
         ) {
             return;
         }
