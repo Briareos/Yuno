@@ -48,6 +48,8 @@ class PageListener
             $contentType = 'image/gif';
         } elseif ($extension === 'xml') {
             $contentType = 'application/xml';
+        } elseif ($extension === 'ico') {
+            $contentType = 'image/x-icon';
         }
         if ($extension === 'php') {
             $cwd = getcwd();
