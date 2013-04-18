@@ -22,7 +22,7 @@
         "jms/di-extra-bundle":"1.1.*",
         "kriswallsmith/assetic":"1.1.*@dev",
         "mopa/bootstrap-bundle":"2.1.*",
-        "zendframework/zend-paginator":"2.0.*",
+        "zendframework/zend-paginator":"2.1.*",
         "stof/doctrine-extensions-bundle":"dev-master",
         "beberlei/DoctrineExtensions":"v0.1",
         "craue/twigextensions-bundle":"dev-master",
