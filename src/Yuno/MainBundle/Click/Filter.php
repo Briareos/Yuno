@@ -235,7 +235,7 @@ class Filter
                 && $blacklistedCity['city'] === $city
                 && (($blacklistedCity['region'] !== 'US' && $blacklistedCity['region'] !== 'CA') || $blacklistedCity['region'] === $region)
             ) {
-                $this->addLog(sprintf('City check: City "%s", (%s), "%s" is blacklisted.', $city, $region, $country));
+                $this->addLog(sprintf('City check: City "%s", (%s), "%s" is blacklisted.', htmlentities($city), htmlentities($region), htmlentities($country)));
 
                 return true;
             }
