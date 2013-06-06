@@ -64,15 +64,17 @@ class ClickListener
         if ($campaignGroup === null) {
             return;
         }
-
+        /*
         $filter = new Filter($request, $campaignGroup, $this->em);
         $clickStatus = $filter->getStatus($request, $campaignGroup);
         $log = $filter->getLog();
+        */
         $click = new Click();
         $click->setCampaign($campaignGroup->getCampaign());
+        /*
         $click->setBlocked($clickStatus);
         $click->setLog($log);
-
+        */
         $click->setIp($request->server->get('REMOTE_ADDR'));
 
         if ($request->server->get('HTTP_USER_AGENT')) {
@@ -104,7 +106,7 @@ class ClickListener
 
         $banner = $campaignGroup->chooseAndGetBanner();
         $click->setBanner($banner);
-
+        /*
         if ($clickStatus === Filter::PASS) {
             $siteUrl = $banner->getSite()->getUrl();
             $url = rtrim($siteUrl, '/') . '/?' . $this->encoder->encrypt(
@@ -127,9 +129,10 @@ class ClickListener
                 $url = 'http://' . $campaignGroup->getBannerGroup()->getName();
             }
         }
+        */
         $this->em->persist($click);
         $this->em->flush();
-
+        /*
         if ($clickStatus === Filter::PASS) {
             $response = new RedirectResponse($url);
         } else {
@@ -138,7 +141,20 @@ class ClickListener
 EOF;
             $response = new Response($responseText);
         }
-
+        */
+        $url = $banner->getHumanUrl();
+        $response = new Response(<<<EOF
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>Untitled Document</title>
+        <meta http-equiv="refresh" content="0; URL=$url">
+    </head>
+<body>
+</body>
+</html>
+EOF
+        );
         $event->setResponse($response);
     }
 }
