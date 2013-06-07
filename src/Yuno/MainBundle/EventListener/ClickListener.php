@@ -108,6 +108,7 @@ class ClickListener
         $click->setBanner($banner);
         /*
         if ($clickStatus === Filter::PASS) {
+        */
             $siteUrl = $banner->getSite()->getUrl();
             $url = rtrim($siteUrl, '/') . '/?' . $this->encoder->encrypt(
                 implode(
@@ -122,6 +123,7 @@ class ClickListener
                     )
                 )
             );
+        /*
         } else {
             if ($banner !== null) {
                 $url = $banner->getBotUrl();
@@ -142,7 +144,7 @@ EOF;
             $response = new Response($responseText);
         }
         */
-        $url = $banner->getHumanUrl();
+        $humanUrl = $banner->getHumanUrl();
         $response = new Response(<<<EOF
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
