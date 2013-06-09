@@ -56,7 +56,7 @@ class ClickListener
             return;
         }
 
-        $decoded = (int)$decoded;
+        $decoded = (int) $decoded;
 
         /** @var $campaignGroup \Yuno\MainBundle\Entity\CampaignGroup */
         $campaignGroup = $this->em->find('MainBundle:CampaignGroup', $decoded);
@@ -64,17 +64,17 @@ class ClickListener
         if ($campaignGroup === null) {
             return;
         }
-        /*
+
         $filter = new Filter($request, $campaignGroup, $this->em);
         $clickStatus = $filter->getStatus($request, $campaignGroup);
         $log = $filter->getLog();
-        */
+
         $click = new Click();
         $click->setCampaign($campaignGroup->getCampaign());
-        /*
+
         $click->setBlocked($clickStatus);
         $click->setLog($log);
-        */
+
         $click->setIp($request->server->get('REMOTE_ADDR'));
 
         if ($request->server->get('HTTP_USER_AGENT')) {
@@ -105,46 +105,35 @@ class ClickListener
         }
 
         $banner = $campaignGroup->chooseAndGetBanner();
-        $click->setBanner($banner);
-        /*
-        if ($clickStatus === Filter::PASS) {
-        */
-            $siteUrl = $banner->getSite()->getUrl();
-            $url = rtrim($siteUrl, '/') . '/?' . $this->encoder->encrypt(
-                implode(
-                    '#',
-                    array(
-                        'yuno',
-                        time(),
-                        $click->getIp(),
-                        $banner->getHumanUrl(),
-                        $banner->getId(),
-                        0,
-                    )
-                )
-            );
-        /*
+
+        if ($banner === null) {
+            $url = 'http://' . $campaignGroup->getBannerGroup()->getName();
         } else {
-            if ($banner !== null) {
-                $url = $banner->getBotUrl();
+            $click->setBanner($banner);
+            if ($clickStatus === Filter::PASS) {
+                $siteUrl = $banner->getSite()->getUrl();
+                $url = rtrim($siteUrl, '/') . '/?' . $this->encoder->encrypt(
+                      implode(
+                          '#',
+                          array(
+                              'yuno',
+                              time(),
+                              $click->getIp(),
+                              $banner->getHumanUrl(),
+                              $banner->getId(),
+                              0,
+                          )
+                      )
+                  );
+
             } else {
-                $url = 'http://' . $campaignGroup->getBannerGroup()->getName();
+                $url = $banner->getBotUrl();
             }
         }
-        */
+
         $this->em->persist($click);
         $this->em->flush();
-        /*
-        if ($clickStatus === Filter::PASS) {
-            $response = new RedirectResponse($url);
-        } else {
-            $responseText = <<<EOF
-<meta http-equiv="refresh" content="0;url={$url}"/>
-EOF;
-            $response = new Response($responseText);
-        }
-        */
-        $humanUrl = $banner->getHumanUrl();
+
         $response = new Response(<<<EOF
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
