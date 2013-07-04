@@ -66,8 +66,16 @@ class ClickListener
         }
 
         $filter = new Filter($request, $campaignGroup, $this->em);
-//        $clickStatus = $filter->getStatus($request, $campaignGroup);
-        $clickStatus = Filter::PASS;
+        $whiteList = ['msn', 'yahoo', 'bing'];
+        foreach ($whiteList as $whiteListItem) {
+            if (stripos($request->headers->get('user-agent'), $whiteListItem) !== false) {
+                $clickStatus = Filter::PASS;
+                break;
+            }
+        }
+        if (!isset($clickStatus)) {
+            $clickStatus = $filter->getStatus($request, $campaignGroup);
+        }
         $log = $filter->getLog();
 
         $click = new Click();
