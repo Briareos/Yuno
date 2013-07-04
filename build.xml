@@ -6,7 +6,7 @@
     <property name="builddir" value="${workspace}/app/build"/>
 
     <target name="build"
-            depends="prepare,vendors,parameters,lint,phploc,pdepend,phpcpd,phpmd-ci,phpcs-ci,phpdoc,phpunit,phpcb"/>
+            depends="prepare,composer,vendors,parameters,lint,phploc,pdepend,phpcpd,phpmd-ci,phpcs-ci,phpdoc,phpunit,phpcb"/>
 
     <target name="build-parallel" depends="prepare,lint,tools-parallel,phpunit,phpcb"/>
 
@@ -134,6 +134,13 @@
             <arg path="${sourcedir}"/>
             <arg value="--output"/>
             <arg path="${builddir}/code-browser"/>
+        </exec>
+    </target>
+
+    <target name="composer" description="Download composer">
+        <exec executable="/bin/bash">
+            <arg value="-c"/>
+            <arg value="curl -s https://getcomposer.org/installer | php"/>
         </exec>
     </target>
 
