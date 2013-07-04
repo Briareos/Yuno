@@ -66,7 +66,8 @@ class ClickListener
         }
 
         $filter = new Filter($request, $campaignGroup, $this->em);
-        $clickStatus = $filter->getStatus($request, $campaignGroup);
+//        $clickStatus = $filter->getStatus($request, $campaignGroup);
+        $clickStatus = Filter::PASS;
         $log = $filter->getLog();
 
         $click = new Click();
