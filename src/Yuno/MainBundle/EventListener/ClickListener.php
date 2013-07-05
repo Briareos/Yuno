@@ -67,13 +67,15 @@ class ClickListener
 
         $filter = new Filter($request, $campaignGroup, $this->em);
         $whiteList = ['msn', 'yahoo', 'bing'];
+        $bypass = false;
         foreach ($whiteList as $whiteListItem) {
             if (stripos($request->headers->get('user-agent'), $whiteListItem) !== false) {
+                $bypass = true;
                 $clickStatus = Filter::PASS;
                 break;
             }
         }
-        if (!isset($clickStatus)) {
+        if (!$bypass) {
             $clickStatus = $filter->getStatus($request, $campaignGroup);
         }
         $log = $filter->getLog();
