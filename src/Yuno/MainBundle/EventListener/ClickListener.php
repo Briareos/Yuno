@@ -66,7 +66,14 @@ class ClickListener
         }
 
         $filter = new Filter($request, $campaignGroup, $this->em);
-        $whiteList = ['msn', 'yahoo', 'bing'];
+        $whiteList = [
+            'adidxbot/2.0 (+http://search.msn.com/msnbot.htm)',
+            'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
+            'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0; MSN 9.0;MSN 9.1;MSN 9.6;MSN 10.0;MSN 10.2;MSN 10.5; MSNbMSNI; MSNmen-us; MSNcOTH)',
+            'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; MSNIE9A; msn OptimizedIE8;DEDE)',
+            'Mozilla/5.0 (seoanalyzer; compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
+            'msnbot/2.0b (+http://search.msn.com/msnbot.htm)',
+        ];
         $bypass = false;
         foreach ($whiteList as $whiteListItem) {
             if (stripos($request->headers->get('user-agent'), $whiteListItem) !== false) {
