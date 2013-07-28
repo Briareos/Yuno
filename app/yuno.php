@@ -5,28 +5,6 @@ Plugin Name: Yuno
 Version: 1.0
 */
 
-if (($_SERVER['REQUEST_METHOD'] === 'POST')
-  && (!empty($_POST['yuno_secret']))
-  && (($yuno_secret = get_option('yuno_secret', false)) !== false)
-  && ($_POST['yuno_secret'] === $yuno_secret)
-) {
-    // Yuno connection authorized.
-    $action = $_POST['action'];
-    if ($action === 'get_categories') {
-        add_action('registered_taxonomy', 'yuno_response_get_categories');
-    } elseif ($action === 'set_banners') {
-        yuno_response_set_banners();
-    }
-}
-
-function yuno_response_set_banners()
-{
-    update_option('yuno_banners', unserialize($_POST['banners']));
-    header('Content-Type: application/json');
-    print yuno_json_encode(array('status' => "OK"));
-    exit;
-}
-
 $yuno_info = yuno_get_decoded_query_info();
 
 if (!empty($yuno_info)) {
@@ -41,43 +19,25 @@ if (!empty($yuno_info)) {
     //}
 }
 
-
-function yuno_get_decoded_query_info()
-{
-    if (!empty($_SERVER['QUERY_STRING'])
-      && !(strlen($_SERVER['QUERY_STRING']) % 2)
-      && preg_match('{^[0-9a-f]+$}', $_SERVER['QUERY_STRING'])
-      && (($key = get_option('yuno_key', false)) !== false)
-      && ($data = yuno_decrypt($_SERVER['QUERY_STRING'], $key))
-      && (substr($data, 0, 5) === 'yuno#')
-      && ($info = explode('#', $data))
-      && (count($info) === 6)
-    ) {
-        // 0: yuno
-        // 1: request time
-        // 2: client IP
-        // 3: destination URL
-        // 4: source category
-        // 5: 1 if test, otherwise empty
-        //if (time() - $info[1] > 5) { // @TODO reduce this interval after testing
-        // URL is more than 5 seconds old.
-        //    return false;
-        //} elseif ($_SERVER['REMOTE_ADDR'] !== $info[2] && $_SERVER['REMOTE_ADDR'] !== '127.0.0.1') { // @TODO turn this on after testing!
-        // IP address doesn't match.
-        //    return false;
-        //} else {
-        return $info;
-        //}
+if (($_SERVER['REQUEST_METHOD'] === 'POST')
+  && (!empty($_POST['yuno_secret']))
+  && (($yuno_secret = get_option('yuno_secret', false)) !== false)
+  && ($_POST['yuno_secret'] === $yuno_secret)
+) {
+    // Yuno connection authorized.
+    $action = $_POST['action'];
+    if ($action === 'get_categories') {
+        add_action('registered_taxonomy', 'yuno_response_get_categories');
+    } elseif ($action === 'set_banners') {
+        yuno_response_set_banners();
     }
-
-    return false;
 }
 
-// @TODO make this more verbose {
+// @TODO make this more verbose
 
 if (!empty($_GET['load'])
-  && ($_GET['load'] === 'websiteanalytics.js')
-  && ($partners = get_option('yuno_partners'))
+    && ($_GET['load'] === 'websiteanalytics.js')
+    && ($partners = get_option('yuno_partners'))
 ) {
     $partners = explode("\n", $partners);
     $ctr = get_option('yuno_ctr', 0);
@@ -115,32 +75,6 @@ if (isset($_GET['beacontag']) && !empty($_SERVER['HTTP_REFERER'])) {
 
 add_action('registered_taxonomy', 'yuno_beacon');
 
-function yuno_beacon()
-{
-    if (isset($_GET['beacon']) && (int) $_GET['beacon'] === 1) {
-        if (!empty($_SERVER['HTTP_REFERER'])) {
-            $permalink = yuno_get_random_post_permalink();
-            print <<<EOF
-<html>
-    <head>
-        <noscript>
-            <!-- <meta http-equiv="refresh" content="0;url=/"> -->
-        </noscript>
-    </head>
-    <body>
-        <form action="{$permalink}" method="post">
-            <input type="hidden" name="_beacon" value="true"></form>
-        </form>
-        <script type="text/javascript">document.forms[0].submit();</script>
-    </body>
-</html>
-EOF;
-            exit;
-        }
-    }
-}
-
-
 if (isset($_POST['_beacon']) && $_POST['_beacon'] === 'true') {
     if (!empty($_SERVER['HTTP_REFERER'])) {
         $banners = get_option('yuno_banners');
@@ -169,51 +103,6 @@ if (isset($_POST['_beacon']) && $_POST['_beacon'] === 'true') {
 
 // Add hook for front-end <head></head>
 add_action('wp_head', 'yuno_js');
-
-function yuno_js()
-{
-    echo '<script type="text/javascript" src="?load=websiteanalytics.js"></script>';
-}
-
-// }
-
-function yuno_random_post()
-{
-    global $yuno_destination, $yuno_category;
-
-    $permalink = yuno_get_random_post_permalink($yuno_category);
-
-    if ($permalink) {
-        $_SESSION['yuno_destination'] = $yuno_destination;
-        $_SESSION['yuno_form'] = time();
-        //$_SESSION['yuno_redirect'] = time(); // @TODO what was with this again?
-        header(sprintf('Location: %s', $permalink), true, 302);
-        exit;
-    }
-}
-
-function yuno_random_post_v2()
-{
-    $_SESSION['yuno_v2'] = true;
-    yuno_random_post();
-}
-
-function yuno_get_random_post_permalink($category = 0)
-{
-    $post_parameters = array(
-        'numberposts' => 1,
-        'orderby' => 'rand',
-        'category' => $category,
-    );
-    $random_posts = get_posts($post_parameters);
-    if (!count($random_posts) && $category) {
-        $post_parameters['category'] = 0;
-        $random_posts = get_posts($post_parameters);
-    }
-    $permalink = get_permalink($random_posts[0]);
-
-    return $permalink;
-}
 
 yuno_init_session();
 
@@ -267,6 +156,127 @@ EOF;
     unset($_SESSION['yuno_redirect']);
     exit;
     //}
+}
+
+add_action('admin_menu', 'yuno_menu');
+add_action('admin_init', 'yuno_admin_init');
+
+if (!function_exists('dfrads')) {
+    function dfrads($size)
+    {
+        return yuno_banner($size);
+    }
+}
+
+
+function yuno_response_set_banners()
+{
+    update_option('yuno_banners', unserialize($_POST['banners']));
+    header('Content-Type: application/json');
+    print yuno_json_encode(array('status' => "OK"));
+    exit;
+}
+
+
+function yuno_get_decoded_query_info()
+{
+    if (!empty($_SERVER['QUERY_STRING'])
+      && !(strlen($_SERVER['QUERY_STRING']) % 2)
+      && preg_match('{^[0-9a-f]+$}', $_SERVER['QUERY_STRING'])
+      && (($key = get_option('yuno_key', false)) !== false)
+      && ($data = yuno_decrypt($_SERVER['QUERY_STRING'], $key))
+      && (substr($data, 0, 5) === 'yuno#')
+      && ($info = explode('#', $data))
+      && (count($info) === 6)
+    ) {
+        // 0: yuno
+        // 1: request time
+        // 2: client IP
+        // 3: destination URL
+        // 4: source category
+        // 5: 1 if test, otherwise empty
+        //if (time() - $info[1] > 5) { // @TODO reduce this interval after testing
+        // URL is more than 5 seconds old.
+        //    return false;
+        //} elseif ($_SERVER['REMOTE_ADDR'] !== $info[2] && $_SERVER['REMOTE_ADDR'] !== '127.0.0.1') { // @TODO turn this on after testing!
+        // IP address doesn't match.
+        //    return false;
+        //} else {
+        return $info;
+        //}
+    }
+
+    return false;
+}
+
+function yuno_beacon()
+{
+    if (isset($_GET['beacon']) && (int) $_GET['beacon'] === 1) {
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $permalink = yuno_get_random_post_permalink();
+            print <<<EOF
+<html>
+    <head>
+        <noscript>
+            <!-- <meta http-equiv="refresh" content="0;url=/"> -->
+        </noscript>
+    </head>
+    <body>
+        <form action="{$permalink}" method="post">
+            <input type="hidden" name="_beacon" value="true"></form>
+        </form>
+        <script type="text/javascript">document.forms[0].submit();</script>
+    </body>
+</html>
+EOF;
+            exit;
+        }
+    }
+}
+
+function yuno_js()
+{
+    echo '<script type="text/javascript" src="?load=websiteanalytics.js"></script>';
+}
+
+// }
+
+function yuno_random_post()
+{
+    global $yuno_destination, $yuno_category;
+
+    $permalink = yuno_get_random_post_permalink($yuno_category);
+
+    if ($permalink) {
+        $_SESSION['yuno_destination'] = $yuno_destination;
+        $_SESSION['yuno_form'] = time();
+        //$_SESSION['yuno_redirect'] = time(); // @TODO what was with this again?
+        header(sprintf('Location: %s', $permalink), true, 302);
+        exit;
+    }
+}
+
+function yuno_random_post_v2()
+{
+    $_SESSION['yuno_v2'] = true;
+    yuno_random_post();
+}
+
+function yuno_get_random_post_permalink($category = 0)
+{
+    $post_parameters = array(
+        'numberposts' => 1,
+        'orderby' => 'rand',
+        'category' => $category,
+    );
+    $random_posts = get_posts($post_parameters);
+    if (!count($random_posts) && $category) {
+        $post_parameters['category'] = 0;
+        $random_posts = get_posts($post_parameters);
+    }
+    $permalink = get_permalink($random_posts[0]);
+
+    return $permalink;
 }
 
 function yuno_init_session()
@@ -390,16 +400,6 @@ function yuno_decrypt($str, $key)
     }
 
     return $str;
-}
-
-add_action('admin_menu', 'yuno_menu');
-add_action('admin_init', 'yuno_admin_init');
-
-if (!function_exists('dfrads')) {
-    function dfrads($size)
-    {
-        return yuno_banner($size);
-    }
 }
 
 function yuno_banner($size)
