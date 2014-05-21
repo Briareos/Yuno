@@ -79,5 +79,3 @@ mopa_bootstrap:
                 icon_color: white
             widget_add_btn:
                 icon: plus-sign
-
-craue_twig_extensions: ~

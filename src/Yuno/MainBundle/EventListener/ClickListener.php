@@ -13,14 +13,14 @@ use Doctrine\ORM\EntityManager;
 
 class ClickListener
 {
+
     private $em;
 
     private $encoder;
 
-
     function __construct(EntityManager $em, Encoder $encoder)
     {
-        $this->em = $em;
+        $this->em      = $em;
         $this->encoder = $encoder;
     }
 
@@ -65,9 +65,9 @@ class ClickListener
             return;
         }
 
-        $filter = new Filter($request, $campaignGroup, $this->em);
+        $filter      = new Filter($request, $campaignGroup, $this->em);
         $clickStatus = $filter->getStatus($request, $campaignGroup);
-        $log = $filter->getLog();
+        $log         = $filter->getLog();
 
         $click = new Click();
         $click->setCampaign($campaignGroup->getCampaign());
@@ -104,28 +104,60 @@ class ClickListener
             $click->setLongitude($request->server->get('GEOIP_LONGITUDE'));
         }
 
+        $blacklisted = false;
+        foreach (['msn', 'yahoo', 'bing'] as $blacklist) {
+            if ($request->server->get('HTTP_USER_AGENT') && stripos($request->server->get('HTTP_USER_AGENT'), $blacklist)) {
+                $blacklisted = true;
+                break;
+            }
+        }
+
+        if ($blacklisted) {
+            $click->setBlocked(Filter::BLOCK_BANNED_USER_AGENT);
+            $log   = $click->getLog();
+            $log[] = 'Possibly Bing/MSN/Yahoo bot; showing a basic maintenance page.';
+            $click->setLog($log);
+            $this->em->persist($click);
+            $this->em->flush();
+
+            $response = new Response(<<<HTML
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>Under Maintenance</title>
+        <p>Site is currently under maintenance. Please check back in a minute.</p>
+    </head>
+<body>
+</body>
+</html>
+HTML
+            );
+            $event->setResponse($response);
+
+            return;
+        }
+
         $banner = $campaignGroup->chooseAndGetBanner();
 
         if ($banner === null) {
-            $url = 'http://' . $campaignGroup->getBannerGroup()->getName();
+            $url = 'http://'.$campaignGroup->getBannerGroup()->getName();
         } else {
             $click->setBanner($banner);
             if ($clickStatus === Filter::PASS) {
                 $siteUrl = $banner->getSite()->getUrl();
-                $url = rtrim($siteUrl, '/') . '/?' . $this->encoder->encrypt(
-                      implode(
-                          '#',
-                          array(
-                              'yuno',
-                              time(),
-                              $click->getIp(),
-                              $banner->getHumanUrl(),
-                              $banner->getId(),
-                              0,
-                          )
-                      )
-                  );
-
+                $url     = rtrim($siteUrl, '/').'/?'.$this->encoder->encrypt(
+                        implode(
+                            '#',
+                            array(
+                                'yuno',
+                                time(),
+                                $click->getIp(),
+                                $banner->getHumanUrl(),
+                                $banner->getId(),
+                                0,
+                            )
+                        )
+                    );
             } else {
                 $url = $banner->getBotUrl();
             }
@@ -134,17 +166,17 @@ class ClickListener
         $this->em->persist($click);
         $this->em->flush();
 
-        $response = new Response(<<<EOF
+        $response = new Response(<<<HTML
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
-        <title>Untitled Document</title>
+        <title>Under Maintenance</title>
         <meta http-equiv="refresh" content="0; URL=$url">
     </head>
 <body>
 </body>
 </html>
-EOF
+HTML
         );
         $event->setResponse($response);
     }
