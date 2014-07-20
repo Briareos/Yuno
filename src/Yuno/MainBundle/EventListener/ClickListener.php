@@ -95,7 +95,7 @@ class ClickListener
             $click->setRegion($request->server->get('GEOIP_REGION'));
         }
         if ($request->server->get('GEOIP_CITY')) {
-            $click->setCity(htmlentities($request->server->get('GEOIP_CITY')));
+            $click->setCity($request->server->get('GEOIP_CITY'));
         }
         if ($request->server->get('GEOIP_LATITUDE')) {
             $click->setLatitude($request->server->get('GEOIP_LATITUDE'));
