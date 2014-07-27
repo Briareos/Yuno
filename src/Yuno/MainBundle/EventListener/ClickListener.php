@@ -120,20 +120,6 @@ class ClickListener
             $this->em->persist($click);
             $this->em->flush();
 
-            $response = new Response(<<<HTML
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-    <head>
-        <title>Under Maintenance</title>
-        <p>Site is currently under maintenance. Please check back in a minute.</p>
-    </head>
-<body>
-</body>
-</html>
-HTML
-            );
-            $event->setResponse($response);
-
             return;
         }
 
