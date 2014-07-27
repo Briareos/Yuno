@@ -13,3 +13,4 @@ app/config/deploy/
 webroot
 certs
 app/config/parameters.yml
+yuno_pages/
