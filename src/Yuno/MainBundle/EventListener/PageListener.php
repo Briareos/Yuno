@@ -24,9 +24,9 @@ class PageListener
         if (!preg_match('{^/[a-z0-9_-]+\.(?:php|html|css|js)$}i', $path)
           && !preg_match('{^/(?:images|img)/[a-z0-9_/-]+\.(?:jpg|jpeg|png|gif)$}i', $path)
           && !preg_match('{^/(?:style|css)/[a-z0-9_-]+\.css$}i', $path)
-          && !preg_match('{^/js/[a-z0-9_.-]+\.js$}i', $path)
+          && !preg_match('{^/js/[a-z0-9_\.-]+\.js$}i', $path)
           && !preg_match('{^/[a-z0-9]+\.xml$}i', $path)
-          && !preg_match('{^/fonts?/[a-z0-9]+\.(woff|ttf|svg|eot)$}i', $path)
+          && !preg_match('{^/fonts?/[a-z0-9_\.-]+\.(woff|ttf|svg|eot)$}i', $path)
           && !(preg_match('{^/favicon\.(ico|png)$}', $path, $matches) && file_exists($this->pages . $matches[0]))
         ) {
             return;
