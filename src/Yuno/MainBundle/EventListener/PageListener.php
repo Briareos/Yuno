@@ -17,20 +17,21 @@ class PageListener
 
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $uri = $event->getRequest()->getRequestUri();
-        if ($uri === '/') {
-            $uri = '/home.php';
+        $path = $event->getRequest()->getPathInfo();
+        if ($path === '/') {
+            $path = '/home.php';
         }
-        if (!preg_match('{^/[a-z0-9_-]+\.(?:php|html|css|js)$}i', $uri)
-          && !preg_match('{^/(?:images|img)/[a-z0-9_/-]+\.(?:jpg|jpeg|png|gif)$}i', $uri)
-          && !preg_match('{^/(?:style|css)/[a-z0-9_-]+\.css$}i', $uri)
-          && !preg_match('{^/js/[a-z0-9_-]+\.js$}i', $uri)
-          && !preg_match('{^/[a-z0-9]+\.xml$}i', $uri)
-          && !(preg_match('{^/favicon\.(ico|png)$}', $uri, $matches) && file_exists($this->pages . $matches[0]))
+        if (!preg_match('{^/[a-z0-9_-]+\.(?:php|html|css|js)$}i', $path)
+          && !preg_match('{^/(?:images|img)/[a-z0-9_/-]+\.(?:jpg|jpeg|png|gif)$}i', $path)
+          && !preg_match('{^/(?:style|css)/[a-z0-9_-]+\.css$}i', $path)
+          && !preg_match('{^/js/[a-z0-9_.-]+\.js$}i', $path)
+          && !preg_match('{^/[a-z0-9]+\.xml$}i', $path)
+          && !preg_match('{^/fonts?/[a-z0-9]+\.(woff|ttf|svg|eot)$}i', $path)
+          && !(preg_match('{^/favicon\.(ico|png)$}', $path, $matches) && file_exists($this->pages . $matches[0]))
         ) {
             return;
         }
-        $file = $this->pages . '/' . $uri;
+        $file = $this->pages . '/' . $path;
         if (!file_exists($file)) {
             return;
         }
@@ -50,6 +51,16 @@ class PageListener
             $contentType = 'application/xml';
         } elseif ($extension === 'ico') {
             $contentType = 'image/x-icon';
+        } elseif ($extension === 'svg') {
+            $contentType = 'image/svg+xml';
+        } elseif ($extension === 'woff') {
+            $contentType = 'application/font-woff';
+        } elseif ($extension === 'ttf') {
+            $contentType = 'application/x-font-ttf';
+        } elseif ($extension === 'eot') {
+            $contentType = 'application/vnd.ms-fontobject';
+        } elseif ($extension === 'otf') {
+            $contentType = 'application/x-font-opentype';
         }
         if ($extension === 'php') {
             $cwd = getcwd();
