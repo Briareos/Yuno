@@ -63,11 +63,11 @@
         <service id="yuno.click.listener" class="Yuno\MainBundle\EventListener\ClickListener">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="yuno.encoder"/>
-            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="2048"/>
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="200"/>
         </service>
         <service id="page.listener" class="Yuno\MainBundle\EventListener\PageListener">
             <argument>%yuno_pages%</argument>
-            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="4096"/>
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="100"/>
         </service>
         <!--
         <service id="form.type_extension.autocomplete_choice" class="Yuno\MainBundle\Form\AutocompleteChoiceTypeExtension">
