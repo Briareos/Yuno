@@ -13,8 +13,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class SiteType extends AbstractType
 {
 
-    private $securityContext;
-
     function __construct(SecurityContextInterface $securityContext)
     {
         $this->securityContext = $securityContext;
