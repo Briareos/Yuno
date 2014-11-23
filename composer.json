@@ -26,7 +26,8 @@
         "stof/doctrine-extensions-bundle": "1.1.0",
         "beberlei/DoctrineExtensions": "v0.1",
         "craue/twigextensions-bundle": "2.0.1",
-        "doctrine/doctrine-migrations-bundle": "1.0.0"
+        "doctrine/migrations" : "dev-master#f4fe9d9cc21a711d89d91d29c4a4e7945289cdd0",
+        "doctrine/doctrine-migrations-bundle": "dev-master#81575a4316951125ce408c70f30547c77d98f78a"
     },
     "require-dev": {
         "sensio/generator-bundle": "2.4.0"
@@ -73,7 +74,10 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "github-oauth": {
+            "github.com": "8dd1a82544efd4754b49ffd6d55b25b17e5244eb"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
