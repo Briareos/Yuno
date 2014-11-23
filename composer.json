@@ -18,6 +18,7 @@
         "sensio/distribution-bundle": "3.0.10",
         "sensio/framework-extra-bundle": "3.0.3",
         "incenteev/composer-parameter-handler": "2.1.0",
+        "symfony/icu": "1.2.2",
         "jms/security-extra-bundle": "1.5.1",
         "jms/di-extra-bundle": "1.4.0",
         "mopa/bootstrap-bundle": "2.3.1",
@@ -75,6 +76,7 @@
         "bin-dir": "bin"
     },
     "minimum-stability": "dev",
+    "preferStable": true,
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web"
