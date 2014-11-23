@@ -24,7 +24,7 @@
         <field name="blocked" type="smallint" column="blocked" nullable="true"/>
         <field name="latitude" type="decimal" column="latitude" scale="6" nullable="true"/>
         <field name="longitude" type="decimal" column="longitude" scale="6" nullable="true"/>
-        <field name="log" type="array" column="log" nullable="true"/>
+        <field name="log" type="json_array" column="log" nullable="true"/>
         <many-to-one target-entity="Yuno\MainBundle\Entity\Banner" field="banner" inversed-by="clicks">
             <join-column name="banner_id" referenced-column-name="id" nullable="true" on-delete="CASCADE"/>
         </many-to-one>

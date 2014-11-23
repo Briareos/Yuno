@@ -4,7 +4,6 @@ namespace Yuno\MainBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Yuno\MainBundle\Entity\Click;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Yuno\MainBundle\Click\Filter;

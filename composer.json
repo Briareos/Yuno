@@ -26,7 +26,8 @@
         "stof/doctrine-extensions-bundle": "dev-master",
         "beberlei/DoctrineExtensions": "v0.1",
         "craue/twigextensions-bundle": "dev-master",
-        "uco/twig-extensions-bundle": "dev-master"
+        "uco/twig-extensions-bundle": "dev-master",
+        "doctrine/doctrine-migrations-bundle": "1.0.0"
     },
     "repositories": [
         {

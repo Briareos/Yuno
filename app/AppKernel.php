@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
             new Craue\TwigExtensionsBundle\CraueTwigExtensionsBundle(),
             new Uco\TwigExtensionsBundle\UcoTwigExtensionsBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
