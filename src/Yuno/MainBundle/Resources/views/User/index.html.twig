@@ -31,9 +31,9 @@
                     {% endset %}
                     <button class="btn btn-mini popover-me" data-content="{{ user_roles }}" data-html="true" data-title="{{ entity }}'s permissions">View permissions</button>
                 </td>
-                <td>{% if entity.createdAt %}<span class="tooltip-me" data-title="{{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.createdAt|dateage }} ago</span>{% endif %}</td>
-                <td>{% if entity.lastLoginAt %}<span class="tooltip-me" data-title="{{ entity.lastLoginAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.lastLoginAt|dateage }} ago</span>{% endif %}</td>
-                <td>{% if entity.lastActiveAt %}<span class="tooltip-me" data-title="{{ entity.lastActiveAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.lastActiveAt|dateage }} ago</span>{% endif %}</td>
+                <td>{% if entity.createdAt %}<span class="tooltip-me" data-title="{{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.createdAt|time_diff }} ago</span>{% endif %}</td>
+                <td>{% if entity.lastLoginAt %}<span class="tooltip-me" data-title="{{ entity.lastLoginAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.lastLoginAt|time_diff }} ago</span>{% endif %}</td>
+                <td>{% if entity.lastActiveAt %}<span class="tooltip-me" data-title="{{ entity.lastActiveAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.lastActiveAt|time_diff }} ago</span>{% endif %}</td>
                 <td>{{ list_actions(entity, 'user') }}</td>
             </tr>
         {% endfor %}

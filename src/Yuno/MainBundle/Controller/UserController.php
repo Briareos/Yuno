@@ -22,6 +22,7 @@ use JMS\SecurityExtraBundle\Annotation\SecureParam;
  */
 class UserController extends Controller
 {
+
     /**
      * @var \Doctrine\ORM\EntityManager
      *
@@ -48,9 +49,9 @@ class UserController extends Controller
     {
         $entities = $this->em->getRepository('MainBundle:User')->findAll();
 
-        return array(
+        return [
             'entities' => $entities,
-        );
+        ];
     }
 
     /**
@@ -64,20 +65,20 @@ class UserController extends Controller
     public function createAction(Request $request)
     {
         $entity = new User();
-        $form = $this->createForm(new UserType(), $entity);
+        $form   = $this->createForm(new UserType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
             $this->em->persist($entity);
             $this->em->flush();
 
-            return $this->redirect($this->generateUrl('user_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('user_show', ['id' => $entity->getId()]));
         }
 
-        return array(
+        return [
             'entity' => $entity,
-            'form' => $form->createView(),
-        );
+            'form'   => $form->createView(),
+        ];
     }
 
     /**
@@ -91,12 +92,12 @@ class UserController extends Controller
     public function newAction()
     {
         $entity = new User();
-        $form = $this->createForm(new UserType(), $entity);
+        $form   = $this->createForm(new UserType(), $entity);
 
-        return array(
+        return [
             'entity' => $entity,
-            'form' => $form->createView(),
-        );
+            'form'   => $form->createView(),
+        ];
     }
 
     /**
@@ -110,9 +111,9 @@ class UserController extends Controller
      */
     public function showAction(User $user)
     {
-        return array(
+        return [
             'entity' => $user,
-        );
+        ];
     }
 
     /**
@@ -128,10 +129,10 @@ class UserController extends Controller
     {
         $editForm = $this->createForm(new UserType(), $user);
 
-        return array(
+        return [
             'entity' => $user,
-            'form' => $editForm->createView(),
-        );
+            'form'   => $editForm->createView(),
+        ];
     }
 
     /**
@@ -154,13 +155,13 @@ class UserController extends Controller
 
             $this->session->getFlashBag()->add('info', "User updated.");
 
-            return $this->redirect($this->generateUrl('user_edit', array('id' => $user->getId())));
+            return $this->redirect($this->generateUrl('user_edit', ['id' => $user->getId()]));
         }
 
-        return array(
+        return [
             'entity' => $user,
-            'form' => $editForm->createView(),
-        );
+            'form'   => $editForm->createView(),
+        ];
     }
 
     /**
@@ -174,10 +175,10 @@ class UserController extends Controller
     {
         $form = $this->createDeleteForm($user);
 
-        return array(
-            'entity' => $user,
+        return [
+            'entity'      => $user,
             'delete_form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -210,8 +211,8 @@ class UserController extends Controller
      */
     private function createDeleteForm(User $user)
     {
-        return $this->createFormBuilder(array('id' => $user->getId()))
-          ->add('id', 'hidden')
-          ->getForm();
+        return $this->createFormBuilder(['id' => $user->getId()])
+            ->add('id', 'hidden')
+            ->getForm();
     }
 }

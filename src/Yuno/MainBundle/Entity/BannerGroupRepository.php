@@ -14,8 +14,8 @@ class BannerGroupRepository extends EntityRepository
 {
     public function getBannerCountsForUser(User $user)
     {
-        return $this->getEntityManager()->createQuery('Select bg.id, Count(b.id) As total From MainBundle:BannerGroup bg Index By bg.id Left Join bg.banners b Left Join b.site s Where s.user = :user Group By bg')
-          ->setParameter('user', $user)
-          ->execute();
+        return $this->getEntityManager()->createQuery('SELECT bg.id, Count(b.id) AS total FROM MainBundle:BannerGroup bg INDEX BY bg.id LEFT JOIN bg.banners b LEFT JOIN b.site s WHERE s.user = :USER GROUP BY bg')
+            ->setParameter('user', $user)
+            ->execute();
     }
 }

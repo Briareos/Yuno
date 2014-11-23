@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
  */
 class User implements UserInterface, EquatableInterface, \Serializable
 {
+
     /**
      * @var integer
      */
@@ -84,13 +85,12 @@ class User implements UserInterface, EquatableInterface, \Serializable
      */
     private $campaigns;
 
-
     function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->salt = $this->generateSalt();
-        $this->roles = array();
-        $this->sites = new ArrayCollection();
+        $this->salt      = $this->generateSalt();
+        $this->roles     = [];
+        $this->sites     = new ArrayCollection();
         $this->campaigns = new ArrayCollection();
     }
 
@@ -113,6 +113,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
      * Set username
      *
      * @param string $username
+     *
      * @return User
      */
     public function setUsername($username)
@@ -136,6 +137,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
      * Set password
      *
      * @param string $password
+     *
      * @return User
      */
     public function setPassword($password)
@@ -159,6 +161,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
      * Set email
      *
      * @param string $email
+     *
      * @return User
      */
     public function setEmail($email)
@@ -182,6 +185,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
      * Set createdAt
      *
      * @param \DateTime $createdAt
+     *
      * @return User
      */
     public function setCreatedAt($createdAt)
@@ -205,6 +209,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
      * Set lastLoginAt
      *
      * @param \DateTime $lastLoginAt
+     *
      * @return User
      */
     public function setLastLoginAt($lastLoginAt)
@@ -228,6 +233,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
      * Set lastActiveAt
      *
      * @param \DateTime $lastActiveAt
+     *
      * @return User
      */
     public function setLastActiveAt($lastActiveAt)
@@ -251,6 +257,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
      * Set locale
      *
      * @param string $locale
+     *
      * @return User
      */
     public function setLocale($locale)
@@ -274,6 +281,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
      * Set timezone
      *
      * @param string $timezone
+     *
      * @return User
      */
     public function setTimezone($timezone)
@@ -297,6 +305,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
      * Set roles
      *
      * @param array $roles
+     *
      * @return User
      */
     public function setRoles($roles)
@@ -316,13 +325,14 @@ class User implements UserInterface, EquatableInterface, \Serializable
      */
     public function getRoles()
     {
-        return $this->roles + array('ROLE_USER' => 'ROLE_USER');
+        return $this->roles + ['ROLE_USER' => 'ROLE_USER'];
     }
 
     /**
      * Set salt
      *
      * @param string $salt
+     *
      * @return User
      */
     public function setSalt($salt)

@@ -16,6 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CampaignType extends AbstractType
 {
+
     private $securityContext;
 
     private $em;
@@ -23,7 +24,7 @@ class CampaignType extends AbstractType
     function __construct(SecurityContextInterface $securityContext, EntityManager $em)
     {
         $this->securityContext = $securityContext;
-        $this->em = $em;
+        $this->em              = $em;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -32,120 +33,117 @@ class CampaignType extends AbstractType
         $builder->add(
             'allowEmptyReferrer',
             'checkbox',
-            array(
-                'label' => "Allow empty referrer",
+            [
+                'label'    => "Allow empty referrer",
                 'required' => false,
-            )
+            ]
         );
         $builder->add(
             'active',
             null,
-            array(
-                'label' => "Active",
+            [
+                'label'    => "Active",
                 'required' => false,
-            )
+            ]
         );
         $builder->add('timezone', 'timezone');
         $builder->add(
             'countryList',
             'country',
-            array(
+            [
                 'multiple' => true,
                 'required' => false,
-                'label' => "Country list",
-                'attr' => array(
+                'label'    => "Country list",
+                'attr'     => [
                     'data-placeholder' => "Select countries",
-                ),
-            )
+                ],
+            ]
         );
         $builder->add(
             'regionList',
             'choice',
-            array(
-                'choices' => Campaign::getAvailableRegions(),
+            [
+                'choices'  => Campaign::getAvailableRegions(),
                 'multiple' => true,
                 'required' => false,
-                'label' => "State/region list",
-                'attr' => array(
+                'label'    => "State/region list",
+                'attr'     => [
                     'data-placeholder' => "Select states/regions",
-                ),
-            )
+                ],
+            ]
         );
         $builder->add(
             'cityList',
             'collection',
-            array(
-                'label' => "Blacklisted cities",
-                'type' => new CityFilterType(),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'widget_add_btn' => array('label' => "Add", 'attr' => array('class' => 'btn')),
-                'show_legend' => false, // dont show another legend of subform
-                'by_reference' => false,
-                'options' => array( // options for collection fields
-                    'label_render' => false,
+            [
+                'label'          => "Blacklisted cities",
+                'type'           => new CityFilterType(),
+                'allow_add'      => true,
+                'allow_delete'   => true,
+                'widget_add_btn' => ['label' => "Add", 'attr' => ['class' => 'btn']],
+                'show_legend'    => false, // dont show another legend of subform
+                'by_reference'   => false,
+                'options'        => [ // options for collection fields
+                    'label_render'         => false,
                     'widget_control_group' => false,
-                    'widget_remove_btn' => array('label' => "Remove", 'attr' => array('class' => 'btn')),
-                    'attr' => array('class' => 'input-large'),
-                ),
-            )
+                    'widget_remove_btn'    => ['label' => "Remove", 'attr' => ['class' => 'btn']],
+                    'attr'                 => ['class' => 'input-large'],
+                ],
+            ]
         );
         $builder->add(
             'schedule',
             'collection',
-            array(
-                'type' => new TimeRangeType(),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'widget_add_btn' => array('label' => "Add", 'attr' => array('class' => 'btn')),
-                'show_legend' => false, // dont show another legend of subform
-                'by_reference' => false,
-                'options' => array( // options for collection fields
-                    'label_render' => false,
+            [
+                'type'           => new TimeRangeType(),
+                'allow_add'      => true,
+                'allow_delete'   => true,
+                'widget_add_btn' => ['label' => "Add", 'attr' => ['class' => 'btn']],
+                'show_legend'    => false, // dont show another legend of subform
+                'by_reference'   => false,
+                'options'        => [ // options for collection fields
+                    'label_render'         => false,
                     'widget_control_group' => false,
-                    'widget_remove_btn' => array('label' => "Remove", 'attr' => array('class' => 'btn')),
-                    'attr' => array('class' => 'input-large'),
-                ),
-            )
+                    'widget_remove_btn'    => ['label' => "Remove", 'attr' => ['class' => 'btn']],
+                    'attr'                 => ['class' => 'input-large'],
+                ],
+            ]
         );
         $builder->add(
             'referrerList',
             'collection',
-            array(
-                'label' => "Whitelisted referrers",
-                'type' => new ReferrerMatcherType(),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'widget_add_btn' => array('label' => "Add", 'attr' => array('class' => 'btn')),
-                'show_legend' => false,
-                'by_reference' => false,
-                'options' => array(
-                    'label_render' => false,
+            [
+                'label'          => "Whitelisted referrers",
+                'type'           => new ReferrerMatcherType(),
+                'allow_add'      => true,
+                'allow_delete'   => true,
+                'widget_add_btn' => ['label' => "Add", 'attr' => ['class' => 'btn']],
+                'show_legend'    => false,
+                'by_reference'   => false,
+                'options'        => [
+                    'label_render'         => false,
                     'widget_control_group' => false,
-                    'widget_remove_btn' => array('label' => "Remove", 'attr' => array('class' => 'btn')),
-                    'attr' => array('class' => 'input-xlarge'),
-                )
-            )
+                    'widget_remove_btn'    => ['label' => "Remove", 'attr' => ['class' => 'btn']],
+                    'attr'                 => ['class' => 'input-xlarge'],
+                ]
+            ]
         );
-
-        $factory = $builder->getFormFactory();
 
         $builder->addEventListener(
             FormEvents::POST_SET_DATA,
-            function (FormEvent $event) use ($factory) {
+            function (FormEvent $event) {
                 /** @var $campaign \Yuno\MainBundle\Entity\Campaign */
                 $campaign = $event->getData();
-                $data = null;
-                $form = $event->getForm();
-                $options = array(
+                $data     = null;
+                $form     = $event->getForm();
+                $options  = [
                     'class' => 'MainBundle:User',
-                );
+                ];
                 if ($campaign->getUser() === null) {
                     $data = $this->securityContext->getToken()->getUser();
-
                 }
                 if (!$this->securityContext->isGranted('ROLE_SITE_EDIT_ALL')) {
-                    $options['read_only'] = true;
+                    $options['read_only']     = true;
                     $options['query_builder'] = function (UserRepository $er) {
                         $qb = $er->createQueryBuilder('u');
                         $qb->where('u = :user');
@@ -157,14 +155,8 @@ class CampaignType extends AbstractType
                 if ($campaign->getId()) {
                     $options['disabled'] = true;
                 }
-                $form->add(
-                    $factory->createNamed(
-                        'user',
-                        'entity',
-                        $data,
-                        $options
-                    )
-                );
+                $options['data'] = $data;
+                $form->add('user', 'entity', $options);
             }
         );
     }
@@ -172,9 +164,9 @@ class CampaignType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Yuno\MainBundle\Entity\Campaign'
-            )
+            ]
         );
     }
 

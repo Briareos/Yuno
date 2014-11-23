@@ -36,7 +36,7 @@ class AddUserCommand extends ContainerAwareCommand
                 $errors[] = sprintf('<info>[%s]</info>: %s', $violation->getPropertyPath(), $violation->getMessage());
 
                 return $errors;
-            }, array());
+            }, []);
             $output->writeln("<error>Errors:</error>\n".implode("\n", $errors));
 
             return 1;

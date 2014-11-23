@@ -42,7 +42,7 @@
         </tr>
         <tr>
             <th>Created</th>
-            <td><span class="tooltip-me" data-title="{{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.createdAt|dateage }} ago</span></td>
+            <td><span class="tooltip-me" data-title="{{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.createdAt|time_diff }} ago</span></td>
         </tr>
         <tr>
             <th>Categories <a class="btn btn-primary btn-mini site-update-categories" href="{{ path('site_update_categories', { 'id': entity.id }) }}">Update</a></th>

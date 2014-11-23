@@ -28,6 +28,7 @@ use Yuno\MainBundle\Paginator\PaginatorHelper;
  */
 class BannerController extends Controller
 {
+
     /**
      * @var \Doctrine\ORM\EntityManager
      *
@@ -144,22 +145,22 @@ class BannerController extends Controller
             $bannerUsersQuery->setParameter('user', $this->getUser());
             $bannerUsers = $bannerUsersQuery->execute();
         } else {
-            $bannerUsers = array();
+            $bannerUsers = [];
         }
 
         $totalResults = Paginate::count($bannersQuery);
-        $paginator = PaginatorHelper::getPaginator($totalResults, $page);
+        $paginator    = PaginatorHelper::getPaginator($totalResults, $page);
         PaginatorHelper::applyOffsetAndLimit($bannersQuery, $paginator);
 
         $banners = $bannersQuery->execute();
 
-        return array(
-            'entities' => $banners,
-            'banner_users' => $bannerUsers,
+        return [
+            'entities'             => $banners,
+            'banner_users'         => $bannerUsers,
             'selected_banner_site' => $site,
             'selected_banner_user' => $user,
-            'paginator' => $paginator->getPages(),
-        );
+            'paginator'            => $paginator->getPages(),
+        ];
     }
 
     /**
@@ -173,7 +174,7 @@ class BannerController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Banner();
-        $form = $this->createForm(new BannerType($this->securityContext), $entity);
+        $form   = $this->createForm(new BannerType($this->securityContext), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -187,10 +188,10 @@ class BannerController extends Controller
             return $this->redirect($this->generateUrl('banner_new'));
         }
 
-        return array(
+        return [
             'entity' => $entity,
-            'form' => $form->createView(),
-        );
+            'form'   => $form->createView(),
+        ];
     }
 
     /**
@@ -204,12 +205,12 @@ class BannerController extends Controller
     public function newAction()
     {
         $banner = new Banner();
-        $form = $this->createForm(new BannerType($this->securityContext), $banner);
+        $form   = $this->createForm(new BannerType($this->securityContext), $banner);
 
-        return array(
+        return [
             'entity' => $banner,
-            'form' => $form->createView(),
-        );
+            'form'   => $form->createView(),
+        ];
     }
 
     /**
@@ -223,9 +224,9 @@ class BannerController extends Controller
      */
     public function showAction(Banner $banner)
     {
-        return array(
+        return [
             'entity' => $banner,
-        );
+        ];
     }
 
     /**
@@ -241,10 +242,10 @@ class BannerController extends Controller
     {
         $editForm = $this->createForm(new BannerType($this->securityContext), $banner);
 
-        return array(
+        return [
             'entity' => $banner,
-            'form' => $editForm->createView(),
-        );
+            'form'   => $editForm->createView(),
+        ];
     }
 
     /**
@@ -265,13 +266,13 @@ class BannerController extends Controller
             $this->em->persist($banner);
             $this->em->flush();
 
-            return $this->redirect($this->generateUrl('banner_edit', array('id' => $banner->getId())));
+            return $this->redirect($this->generateUrl('banner_edit', ['id' => $banner->getId()]));
         }
 
-        return array(
+        return [
             'entity' => $banner,
-            'form' => $editForm->createView(),
-        );
+            'form'   => $editForm->createView(),
+        ];
     }
 
     /**
@@ -285,10 +286,10 @@ class BannerController extends Controller
     {
         $form = $this->createDeleteForm($banner);
 
-        return array(
-            'entity' => $banner,
+        return [
+            'entity'      => $banner,
             'delete_form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -321,9 +322,9 @@ class BannerController extends Controller
      */
     private function createDeleteForm(Banner $banner)
     {
-        return $this->createFormBuilder(array('id' => $banner->getId()))
-          ->add('id', 'hidden')
-          ->getForm();
+        return $this->createFormBuilder(['id' => $banner->getId()])
+            ->add('id', 'hidden')
+            ->getForm();
     }
 
     /**
@@ -337,11 +338,11 @@ class BannerController extends Controller
 
         $infoGuesser = new InfoGuesser($code);
 
-        $data = array(
+        $data = [
             'humanUrl' => $infoGuesser->guessHumanUrl(),
-            'botUrl' => $infoGuesser->guessBotUrl(),
-            'size' => implode('x', $infoGuesser->guessSize()),
-        );
+            'botUrl'   => $infoGuesser->guessBotUrl(),
+            'size'     => implode('x', $infoGuesser->guessSize()),
+        ];
 
         return new JsonResponse($data);
     }

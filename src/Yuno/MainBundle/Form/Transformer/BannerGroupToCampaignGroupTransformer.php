@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 
 class BannerGroupToCampaignGroupTransformer implements DataTransformerInterface
 {
+
     private $em;
 
     function __construct(Entitymanager $em)
@@ -14,17 +15,15 @@ class BannerGroupToCampaignGroupTransformer implements DataTransformerInterface
         $this->em = $em;
     }
 
-
     /**
      * {@inheritdoc}
      */
     public function transform($value)
     {
-        if($value === null){
+        if ($value === null) {
             return null;
         }
-        if(is_object($value)){
-
+        if (is_object($value)) {
         }
     }
 
@@ -33,12 +32,10 @@ class BannerGroupToCampaignGroupTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
-        if($value === null) {
+        if ($value === null) {
             return null;
         }
-        if(is_object($value)){
-
+        if (is_object($value)) {
         }
     }
-
 }

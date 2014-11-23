@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 
 class YunoExtension extends \Twig_Extension
 {
+
     private $em;
 
     public function __construct(EntityManager $em)
@@ -23,10 +24,8 @@ class YunoExtension extends \Twig_Extension
 
     public function getFunctions()
     {
-        return array(
+        return [
 
-        );
+        ];
     }
-
-
 }

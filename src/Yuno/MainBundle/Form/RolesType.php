@@ -7,6 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class RolesType extends AbstractType
 {
+
     private $roles;
 
     function __construct(array $roles)
@@ -30,12 +31,10 @@ class RolesType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array(
-                'choices' => array_combine(array_keys($this->roles), array_keys($this->roles)),
-                'multiple'=>true,
-            )
+            [
+                'choices'  => array_combine(array_keys($this->roles), array_keys($this->roles)),
+                'multiple' => true,
+            ]
         );
     }
-
-
 }

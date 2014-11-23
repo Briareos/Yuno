@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Banner
 {
+
     /**
      * @var integer
      */
@@ -60,16 +61,15 @@ class Banner
      */
     private $clicks;
 
-
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->clicks = new ArrayCollection();
+        $this->clicks    = new ArrayCollection();
     }
 
     public static function getAvailableSizes()
     {
-        $sizes = array(
+        $sizes = [
             'text',
             '88x31',
             '100x100',
@@ -84,7 +84,7 @@ class Banner
             '300x250',
             '468x60',
             '728x90',
-        );
+        ];
 
         return array_combine($sizes, $sizes);
     }
@@ -103,6 +103,7 @@ class Banner
      * Set size
      *
      * @param string $size
+     *
      * @return Banner
      */
     public function setSize($size)
@@ -126,6 +127,7 @@ class Banner
      * Set category
      *
      * @param string $category
+     *
      * @return Banner
      */
     public function setCategory($category)
@@ -149,6 +151,7 @@ class Banner
      * Set code
      *
      * @param string $code
+     *
      * @return Banner
      */
     public function setCode($code)
@@ -172,6 +175,7 @@ class Banner
      * Set humanUrl
      *
      * @param string $humanUrl
+     *
      * @return Banner
      */
     public function setHumanUrl($humanUrl)
@@ -195,6 +199,7 @@ class Banner
      * Set botUrl
      *
      * @param string $botUrl
+     *
      * @return Banner
      */
     public function setBotUrl($botUrl)
@@ -218,6 +223,7 @@ class Banner
      * Set createdAt
      *
      * @param \DateTime $createdAt
+     *
      * @return Banner
      */
     public function setCreatedAt($createdAt)

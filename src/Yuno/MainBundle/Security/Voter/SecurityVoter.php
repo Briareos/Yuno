@@ -35,7 +35,7 @@ class SecurityVoter implements VoterInterface
     {
         /** @var $roleObjects \Symfony\Component\Security\Core\Role\Role[] */
         $roleObjects = $token->getRoles();
-        $roles = array();
+        $roles       = [];
         foreach ($roleObjects as $roleObject) {
             $roles[$roleObject->getRole()] = $roleObject->getRole();
         }
@@ -50,49 +50,46 @@ class SecurityVoter implements VoterInterface
 
         if ($object instanceof Site || $object instanceof Banner || $object instanceof Campaign || $object instanceof Click || $object instanceof User) {
             // Just so our IDE doesn't complain.
-            $base = '';
+            $base    = '';
             $ownerId = 0;
             if ($object instanceof Site) {
-                $base = 'SITE';
+                $base    = 'SITE';
                 $ownerId = $object->getUser()->getId();
             } elseif ($object instanceof Banner) {
-                $base = 'BANNER';
+                $base    = 'BANNER';
                 $ownerId = $object->getSite()->getUser()->getId();
             } elseif ($object instanceof Campaign) {
-                $base = 'CAMPAIGN';
+                $base    = 'CAMPAIGN';
                 $ownerId = $object->getUser()->getId();
             } elseif ($object instanceof Click) {
-                $base = 'CLICK';
+                $base    = 'CLICK';
                 $ownerId = $object->getCampaign()->getUser()->getId();
             } elseif ($object instanceof User) {
-                $base = 'USER';
+                $base    = 'USER';
                 $ownerId = $object->getId();
             }
             foreach ($attributes as $attribute) {
                 if (!$this->canAccess($attribute, $base, $ownerId, $token->getUser(), $object, $roles)) {
                     return self::ACCESS_DENIED;
                 }
-
             }
 
             return self::ACCESS_GRANTED;
-
         } elseif (is_object($object)) {
             throw new \RuntimeException(sprintf('Non-tracked object passed, an instance of "%s" with the following role attributes: "%s".', get_class($object), implode('", "', $attributes)));
         }
-
 
         return self::ACCESS_ABSTAIN;
     }
 
     private function canAccess($attribute, $base, $ownerId, User $user, $object, $roles)
     {
-        if (in_array($attribute, array('VIEW', 'EDIT', 'DELETE'))) {
+        if (in_array($attribute, ['VIEW', 'EDIT', 'DELETE'])) {
             if ($attribute === 'VIEW') {
                 $attribute = 'LIST';
             }
             $globalScope = sprintf('ROLE_%s_%s_ALL', $base, $attribute);
-            $localScope = sprintf('ROLE_%s_%s_OWN', $base, $attribute);
+            $localScope  = sprintf('ROLE_%s_%s_OWN', $base, $attribute);
             if (isset($roles[$globalScope])) {
                 return true;
             } elseif (isset($roles[$localScope]) && $ownerId === $user->getId()) {

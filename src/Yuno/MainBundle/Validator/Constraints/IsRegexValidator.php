@@ -17,6 +17,4 @@ class IsRegexValidator extends ConstraintValidator
             $this->context->addViolation($constraint->message);
         }
     }
-
-
 }

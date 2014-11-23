@@ -88,4 +88,4 @@ security:
 
     access_control:
         - { path: ^/yuno-control-center/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/yuno-control-center/, roles: ROLE_ADMIN }
+        - { path: ^/yuno-control-center(/|$), roles: ROLE_ADMIN }

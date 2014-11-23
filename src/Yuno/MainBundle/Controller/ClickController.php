@@ -2,7 +2,6 @@
 
 namespace Yuno\MainBundle\Controller;
 
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Yuno\MainBundle\Click\Filter;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +26,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ClickController extends Controller
 {
+
     /**
      * @var \Doctrine\ORM\EntityManager
      *
@@ -136,23 +136,23 @@ class ClickController extends Controller
             $clickUsersQuery->setParameter('user', $this->getUser());
             $clickUsers = $clickUsersQuery->execute();
         } else {
-            $clickUsers = array();
+            $clickUsers = [];
         }
 
         $totalResults = Paginate::count($clicksQuery);
-        $paginator = PaginatorHelper::getPaginator($totalResults, $page);
+        $paginator    = PaginatorHelper::getPaginator($totalResults, $page);
         PaginatorHelper::applyOffsetAndLimit($clicksQuery, $paginator);
 
         $clicks = $clicksQuery->execute();
 
-        return array(
-            'statuses'=>Filter::getStatuses(),
-            'entities' => $clicks,
-            'click_users' => $clickUsers,
+        return [
+            'statuses'            => Filter::getStatuses(),
+            'entities'            => $clicks,
+            'click_users'         => $clickUsers,
             'selected_click_site' => $site,
             'selected_click_user' => $user,
-            'paginator' => $paginator->getPages(),
-        );
+            'paginator'           => $paginator->getPages(),
+        ];
     }
 
     /**
@@ -172,9 +172,8 @@ class ClickController extends Controller
             throw $this->createNotFoundException('Unable to find Click entity.');
         }
 
-        return array(
+        return [
             'entity' => $entity,
-        );
+        ];
     }
-
 }

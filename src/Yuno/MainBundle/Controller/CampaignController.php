@@ -29,6 +29,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class CampaignController extends Controller
 {
+
     /**
      * @var \Doctrine\ORM\EntityManager
      *
@@ -90,10 +91,10 @@ class CampaignController extends Controller
 
         $campaigns = $campaignsQuery->execute();
 
-        return array(
+        return [
             'campaign_users' => $campaignUsers,
-            'entities' => $campaigns,
-        );
+            'entities'       => $campaigns,
+        ];
     }
 
     /**
@@ -116,11 +117,11 @@ class CampaignController extends Controller
         $campaignUsersQuery->setParameter('user', $this->getUser());
         $campaignUsers = $campaignUsersQuery->execute();
 
-        return array(
+        return [
             'campaign_users' => $campaignUsers,
-            'entities' => $campaigns,
-            'selected_user' => $user,
-        );
+            'entities'       => $campaigns,
+            'selected_user'  => $user,
+        ];
     }
 
     /**
@@ -139,10 +140,10 @@ class CampaignController extends Controller
         $campaignUsersQuery->setParameter('user', $this->getUser());
         $campaignUsers = $campaignUsersQuery->execute();
 
-        return array(
+        return [
             'campaign_users' => $campaignUsers,
-            'entities' => $campaigns,
-        );
+            'entities'       => $campaigns,
+        ];
     }
 
     /**
@@ -156,12 +157,12 @@ class CampaignController extends Controller
     public function newAction()
     {
         $entity = new Campaign();
-        $form = $this->createForm(new CampaignType($this->securityContext, $this->em), $entity);
+        $form   = $this->createForm(new CampaignType($this->securityContext, $this->em), $entity);
 
-        return array(
+        return [
             'entity' => $entity,
-            'form' => $form->createView(),
-        );
+            'form'   => $form->createView(),
+        ];
     }
 
     /**
@@ -185,17 +186,17 @@ class CampaignController extends Controller
 
         $bannerCount = $bannerGroupRepository->getBannerCountsForUser($campaign->getUser());
 
-        $campaignGroups = array();
+        $campaignGroups = [];
         foreach ($campaign->getCampaignGroups() as $campaignGroup) {
             $campaignGroups[$campaignGroup->getBannerGroup()->getId()] = $campaignGroup;
         }
 
-        return array(
-            'entity' => $campaign,
-            'banner_groups' => $bannerGroups,
+        return [
+            'entity'          => $campaign,
+            'banner_groups'   => $bannerGroups,
             'campaign_groups' => $campaignGroups,
-            'banner_count' => $bannerCount,
-        );
+            'banner_count'    => $bannerCount,
+        ];
     }
 
     /**
@@ -209,7 +210,7 @@ class CampaignController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Campaign();
-        $form = $this->createForm(new CampaignType($this->securityContext, $this->em), $entity);
+        $form   = $this->createForm(new CampaignType($this->securityContext, $this->em), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -217,13 +218,13 @@ class CampaignController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('campaign_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('campaign_show', ['id' => $entity->getId()]));
         }
 
-        return array(
+        return [
             'entity' => $entity,
-            'form' => $form->createView(),
-        );
+            'form'   => $form->createView(),
+        ];
     }
 
     /**
@@ -240,10 +241,10 @@ class CampaignController extends Controller
     {
         $editForm = $this->createForm(new CampaignType($this->securityContext, $this->em), $campaign);
 
-        return array(
+        return [
             'entity' => $campaign,
-            'form' => $editForm->createView(),
-        );
+            'form'   => $editForm->createView(),
+        ];
     }
 
     /**
@@ -264,13 +265,13 @@ class CampaignController extends Controller
             $this->em->persist($campaign);
             $this->em->flush();
 
-            return $this->redirect($this->generateUrl('campaign_edit', array('id' => $campaign->getId())));
+            return $this->redirect($this->generateUrl('campaign_edit', ['id' => $campaign->getId()]));
         }
 
-        return array(
+        return [
             'entity' => $campaign,
-            'form' => $editForm->createView(),
-        );
+            'form'   => $editForm->createView(),
+        ];
     }
 
     /**
@@ -284,12 +285,11 @@ class CampaignController extends Controller
     {
         $form = $this->createDeleteForm($campaign);
 
-        return array(
-            'entity' => $campaign,
+        return [
+            'entity'      => $campaign,
             'delete_form' => $form->createView(),
-        );
+        ];
     }
-
 
     /**
      * Deletes a Campaign entity.
@@ -314,9 +314,9 @@ class CampaignController extends Controller
 
     private function createDeleteForm(Campaign $campaign)
     {
-        return $this->createFormBuilder(array('id' => $campaign->getId()))
-          ->add('id', 'hidden')
-          ->getForm();
+        return $this->createFormBuilder(['id' => $campaign->getId()])
+            ->add('id', 'hidden')
+            ->getForm();
     }
 
     /**
@@ -354,10 +354,10 @@ class CampaignController extends Controller
         }
 
         $campaignGroup = $this->em->getRepository('MainBundle:CampaignGroup')->findOneBy(
-            array(
-                'campaign' => $campaign,
+            [
+                'campaign'    => $campaign,
                 'bannerGroup' => $bannerGroup,
-            )
+            ]
         );
         if ($request->query->getInt('status')) {
             if ($campaignGroup === null) {
@@ -397,11 +397,11 @@ class CampaignController extends Controller
                 $this->em->flush();
                 $this->session->getFlashBag()->add('success', "Campaign quotas updated.");
 
-                return $this->redirect($this->generateUrl('campaign_overview', array('id' => $campaign->getId())));
+                return $this->redirect($this->generateUrl('campaign_overview', ['id' => $campaign->getId()]));
             }
         }
 
-        $filterData = array();
+        $filterData = [];
         $filterForm = $this->getCampaignFilterForm($campaign->getTimezone());
         if ($request->query->getInt('filter', 0) === 1) {
             $filterForm->bind($request);
@@ -412,7 +412,7 @@ class CampaignController extends Controller
         $clickRepository = $this->em->getRepository('MainBundle:Click');
         if (empty($filterData['date'])) {
             $dateStart = $campaign->getPreviousMidnight();
-            $dateEnd = $campaign->getNextMidnight();
+            $dateEnd   = $campaign->getNextMidnight();
         } else {
             $dateStart = clone $filterData['date'];
             $dateStart->modify('midnight');
@@ -420,11 +420,11 @@ class CampaignController extends Controller
             $dateEnd->modify('midnight +1 day');
         }
         $bannerClickCount = $clickRepository->getCountsForCampaignByBanner($campaign, $dateStart, $dateEnd);
-        $groupClickCount = $clickRepository->getCountsForCampaignByGroup($campaign, $dateStart, $dateEnd);
+        $groupClickCount  = $clickRepository->getCountsForCampaignByGroup($campaign, $dateStart, $dateEnd);
 
-        $campaignGroupUrls = array();
+        $campaignGroupUrls = [];
         foreach ($campaign->getCampaignGroups() as $campaignGroup) {
-            $campaignGroupUrls[$campaignGroup->getId()] = rtrim($this->generateUrl('front', array($this->encoder->encrypt($campaignGroup->getId()) => ''), true), '=');
+            $campaignGroupUrls[$campaignGroup->getId()] = rtrim($this->generateUrl('front', [$this->encoder->encrypt($campaignGroup->getId()) => ''], true), '=');
         }
 
         $campaignGroups = $campaign->getCampaignGroups()->toArray();
@@ -435,15 +435,15 @@ class CampaignController extends Controller
             }
         );
 
-        return array(
-            'entity' => $campaign,
-            'form' => $form->createView(),
-            'filter_form' => $filterForm->createView(),
-            'campaign_groups' => $campaignGroups,
+        return [
+            'entity'              => $campaign,
+            'form'                => $form->createView(),
+            'filter_form'         => $filterForm->createView(),
+            'campaign_groups'     => $campaignGroups,
             'campaign_group_urls' => $campaignGroupUrls,
-            'banner_click_count' => $bannerClickCount,
-            'group_click_count' => $groupClickCount,
-        );
+            'banner_click_count'  => $bannerClickCount,
+            'group_click_count'   => $groupClickCount,
+        ];
     }
 
     /**
@@ -459,30 +459,30 @@ class CampaignController extends Controller
             '',
             'form',
             null,
-            array(
+            [
                 'csrf_protection' => false,
-            )
+            ]
         );
         $form->add(
             $this->formFactory->createNamed(
                 'campaignGroup',
                 'entity',
                 null,
-                array(
-                    'label' => "Banner group",
-                    'constraints' => array(
+                [
+                    'label'         => "Banner group",
+                    'constraints'   => [
                         new \Symfony\Component\Validator\Constraints\NotBlank(),
-                    ),
-                    'class' => 'MainBundle:CampaignGroup',
+                    ],
+                    'class'         => 'MainBundle:CampaignGroup',
                     'query_builder' => function (CampaignGroupRepository $er) use ($campaign) {
                         $qb = $er->createQueryBuilder('cg')
-                          ->where('cg.campaign = :campaign')
-                          ->setParameter('campaign', $campaign);
+                            ->where('cg.campaign = :campaign')
+                            ->setParameter('campaign', $campaign);
 
                         return $qb;
                     },
-                    'property' => 'bannerGroup.name'
-                )
+                    'property'      => 'bannerGroup.name'
+                ]
             )
         );
         $form->add(
@@ -490,42 +490,42 @@ class CampaignController extends Controller
                 'time',
                 'text',
                 (new \DateTime('now', new \DateTimeZone($campaign->getTimezone())))->format('H:i:s'),
-                array(
-                    'label' => "Time",
-                    'required' => false,
-                    'constraints' => array(
+                [
+                    'label'        => "Time",
+                    'required'     => false,
+                    'constraints'  => [
                         new \Symfony\Component\Validator\Constraints\Time(),
-                    ),
-                    'widget_addon' => array(
+                    ],
+                    'widget_addon' => [
                         'type' => 'append',
                         'icon' => 'time'
-                    ),
-                    'attr' => array(
+                    ],
+                    'attr'         => [
                         'class' => 'timepicker input-mini',
-                    ),
-                    'help_block' => sprintf("Click time in campaign's timezone (%s).", $campaign->getTimezone()),
-                )
+                    ],
+                    'help_block'   => sprintf("Click time in campaign's timezone (%s).", $campaign->getTimezone()),
+                ]
             )
         );
         $formServer = $this->formFactory->createNamed(
             'server',
             'form',
             null,
-            array(
-                'show_legend' => false,
-                'label_render' => false,
+            [
+                'show_legend'     => false,
+                'label_render'    => false,
                 'widget_controls' => false,
-            )
+            ]
         );
         $formServer->add(
             $this->formFactory->createNamed(
                 'REMOTE_ADDR',
                 'text',
                 $request->server->get('REMOTE_ADDR'),
-                array(
-                    'label' => 'IP address',
+                [
+                    'label'    => 'IP address',
                     'required' => false,
-                )
+                ]
             )
         );
         $formServer->add(
@@ -533,15 +533,15 @@ class CampaignController extends Controller
                 'HTTP_USER_AGENT',
                 'textarea',
                 $request->server->get('HTTP_USER_AGENT'),
-                array(
-                    'label' => 'User agent',
+                [
+                    'label'    => 'User agent',
                     'required' => false,
-                    'attr' => array(
-                        'rows' => 2,
+                    'attr'     => [
+                        'rows'  => 2,
                         'style' => 'white-space: pre',
                         'class' => 'input-xxlarge',
-                    )
-                )
+                    ]
+                ]
             )
         );
         $formServer->add(
@@ -549,15 +549,15 @@ class CampaignController extends Controller
                 'HTTP_REFERER',
                 'textarea',
                 null,
-                array(
-                    'label' => 'Referrer',
+                [
+                    'label'    => 'Referrer',
                     'required' => false,
-                    'attr' => array(
-                        'rows' => 2,
+                    'attr'     => [
+                        'rows'  => 2,
                         'style' => 'white-space: pre',
                         'class' => 'input-xxlarge',
-                    ),
-                )
+                    ],
+                ]
             )
         );
         $formServer->add(
@@ -565,10 +565,10 @@ class CampaignController extends Controller
                 'GEOIP_CONTINENT_CODE',
                 'text',
                 null,
-                array(
-                    'label' => 'Continent code',
+                [
+                    'label'    => 'Continent code',
                     'required' => false,
-                )
+                ]
             )
         );
         $formServer->add(
@@ -576,10 +576,10 @@ class CampaignController extends Controller
                 'GEOIP_COUNTRY_CODE',
                 'text',
                 null,
-                array(
-                    'label' => 'Country code',
+                [
+                    'label'    => 'Country code',
                     'required' => false,
-                )
+                ]
             )
         );
         $formServer->add(
@@ -587,10 +587,10 @@ class CampaignController extends Controller
                 'GEOIP_REGION',
                 'text',
                 null,
-                array(
-                    'label' => 'State/region',
+                [
+                    'label'    => 'State/region',
                     'required' => false,
-                )
+                ]
             )
         );
         $formServer->add(
@@ -598,21 +598,21 @@ class CampaignController extends Controller
                 'GEOIP_CITY',
                 'text',
                 null,
-                array(
-                    'label' => 'City',
+                [
+                    'label'    => 'City',
                     'required' => false,
-                )
+                ]
             )
         );
         $form->add($formServer);
 
         $status = null;
-        $log = null;
+        $log    = null;
         $reason = null;
         if ($request->query->getInt('campaignGroup')) {
             $form->bind($request);
             if ($form->isValid()) {
-                $data = $form->getData();
+                $data         = $form->getData();
                 $clickRequest = new Request();
                 foreach ($data['server'] as $serverKey => $serverData) {
                     $clickRequest->server->set($serverKey, $serverData);
@@ -628,13 +628,13 @@ class CampaignController extends Controller
             }
         }
 
-        return array(
+        return [
             'entity' => $campaign,
-            'form' => $form->createView(),
+            'form'   => $form->createView(),
             'status' => $status,
-            'log' => $log,
+            'log'    => $log,
             'reason' => $reason,
-        );
+        ];
     }
 
     public function getCampaignFilterForm($timezone)
@@ -643,23 +643,23 @@ class CampaignController extends Controller
             '',
             'form',
             null,
-            array()
+            []
         );
         $form->add(
             $this->formFactory->createNamed(
                 'date',
                 'date',
                 new \DateTime('now'),
-                array(
-                    'constraints' => array(
+                [
+                    'constraints'   => [
                         new \Symfony\Component\Validator\Constraints\Date(),
-                    ),
-                    'by_reference' => false,
-                    'attr' => array(
+                    ],
+                    'by_reference'  => false,
+                    'attr'          => [
                         'class' => 'datepicker',
-                    ),
+                    ],
                     'data_timezone' => $timezone,
-                )
+                ]
             )
         );
         $form->add(

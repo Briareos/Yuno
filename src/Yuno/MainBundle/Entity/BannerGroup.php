@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class BannerGroup
 {
+
     /**
      * @var integer
      */
@@ -30,10 +31,9 @@ class BannerGroup
      */
     private $campaignGroups;
 
-
     public function __construct()
     {
-        $this->banners = new ArrayCollection();
+        $this->banners        = new ArrayCollection();
         $this->campaignGroups = new ArrayCollection();
     }
 
@@ -51,6 +51,7 @@ class BannerGroup
      * Set name
      *
      * @param string $name
+     *
      * @return BannerGroup
      */
     public function setName($name)

@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class CampaignGroup
 {
+
     /**
      * @var integer
      */
@@ -40,11 +41,10 @@ class CampaignGroup
      */
     private $bannerGroup;
 
-
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
-        $this->clickDispersion = array();
+        $this->createdAt       = new \DateTime();
+        $this->clickDispersion = [];
     }
 
     /**
@@ -61,6 +61,7 @@ class CampaignGroup
      * Set createdAt
      *
      * @param \DateTime $createdAt
+     *
      * @return CampaignGroup
      */
     public function setCreatedAt($createdAt)
@@ -84,6 +85,7 @@ class CampaignGroup
      * Set clickLimit
      *
      * @param integer $clickLimit
+     *
      * @return CampaignGroup
      */
     public function setClickLimit($clickLimit)
@@ -107,6 +109,7 @@ class CampaignGroup
      * Set clickDispersion
      *
      * @param array $clickDispersion
+     *
      * @return CampaignGroup
      */
     public function setClickDispersion(array $clickDispersion)
@@ -124,11 +127,11 @@ class CampaignGroup
     public function getClickDispersion()
     {
         if (array_diff_key($this->clickDispersion, (array) $this->getBanners()->toArray())
-          || array_diff_key((array) $this->getBanners()->toArray(), $this->clickDispersion)
+            || array_diff_key((array) $this->getBanners()->toArray(), $this->clickDispersion)
         ) {
-            $this->clickDispersion = array();
-            $randomNumbers = $this->generateRandomNumbers($this->getBanners()->count(), 100);
-            $i = 0;
+            $this->clickDispersion = [];
+            $randomNumbers         = $this->generateRandomNumbers($this->getBanners()->count(), 100);
+            $i                     = 0;
             foreach ($this->getBanners() as $banner) {
                 $this->clickDispersion[$banner->getId()] = $randomNumbers[$i++];
             }
@@ -143,15 +146,16 @@ class CampaignGroup
      *
      * @param $count
      * @param $sum
+     *
      * @return array
      */
     public static function generateRandomNumbers($count, $sum)
     {
         if (empty($count)) {
-            return array();
+            return [];
         }
-        $groups = array();
-        $group = 0;
+        $groups = [];
+        $group  = 0;
         while (array_sum($groups) != $sum) {
             $groups[$group] = mt_rand(0, $sum / mt_rand(1, 5));
 
@@ -198,8 +202,8 @@ class CampaignGroup
     public function getRandomBannerId(array $clickDispersion)
     {
         $clickDispersion = $this->getClickDispersion();
-        $random = rand(1, array_sum($clickDispersion));
-        $max = array_sum($clickDispersion);
+        $random          = rand(1, array_sum($clickDispersion));
+        $max             = array_sum($clickDispersion);
         foreach ($clickDispersion as $bannerId => $bannerValue) {
             $max -= $bannerValue;
             if ($random > $max) {
@@ -228,14 +232,14 @@ class CampaignGroup
      */
     public function chooseAndGetBanner()
     {
-        $banners = $this->getBanners();
+        $banners         = $this->getBanners();
         $clickDispersion = $this->getClickDispersion();
         foreach ($banners as $banner) {
             if (!$banner->getSite()->getActive()) {
                 unset($clickDispersion[$banner->getId()]);
             }
         }
-        $bannerId = $this->getRandomBannerId($clickDispersion);
+        $bannerId     = $this->getRandomBannerId($clickDispersion);
         $chosenBanner = $banners->get($bannerId);
 
         return $chosenBanner;

@@ -19,47 +19,46 @@ class TimeRangeType extends AbstractType
         $builder->add(
             'startTime',
             'text',
-            array(
+            [
                 //'empty_data' => '08:00:00',
-                'constraints' => array(
+                'constraints'          => [
                     new \Symfony\Component\Validator\Constraints\Time(),
                     new \Symfony\Component\Validator\Constraints\NotBlank(),
-                ),
-                'widget_prefix' => "From",
-                'widget_addon' => array(
+                ],
+                'widget_prefix'        => "From",
+                'widget_addon'         => [
                     'type' => 'append',
                     'icon' => 'time'
-                ),
-                'attr' => array(
+                ],
+                'attr'                 => [
                     'class' => 'timepicker input-mini',
-                ),
-                'label_render' => false,
-                'widget_controls' => false,
+                ],
+                'label_render'         => false,
+                'widget_controls'      => false,
                 'widget_control_group' => false,
-            )
+            ]
         );
         $builder->add(
             'endTime',
             'text',
-            array(
+            [
                 //'empty_data' => '16:00:00',
-                'constraints' => array(
+                'constraints'          => [
                     new \Symfony\Component\Validator\Constraints\Time(),
                     new \Symfony\Component\Validator\Constraints\NotBlank(),
-                ),
-                'widget_prefix' => "to",
-                'widget_addon' => array(
+                ],
+                'widget_prefix'        => "to",
+                'widget_addon'         => [
                     'type' => 'append',
                     'icon' => 'time'
-                ),
-                'attr' => array(
+                ],
+                'attr'                 => [
                     'class' => 'timepicker input-mini',
-                ),
-                'label_render' => false,
-                'widget_controls' => false,
+                ],
+                'label_render'         => false,
+                'widget_controls'      => false,
                 'widget_control_group' => false,
-            )
+            ]
         );
     }
-
 }

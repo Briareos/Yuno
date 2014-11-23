@@ -6,6 +6,7 @@ use Yuno\MainBundle\Entity\Site;
 
 class Communicator
 {
+
     private $site;
 
     public function __construct(Site $site)
@@ -18,18 +19,18 @@ class Communicator
         $ch = curl_init($this->site->getUrl());
         curl_setopt_array(
             $ch,
-            array(
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => http_build_query(
-                    array(
+            [
+                CURLOPT_POST           => true,
+                CURLOPT_POSTFIELDS     => http_build_query(
+                    [
                         'yuno_secret' => $this->site->getSecret(),
-                        'action' => 'get_categories',
-                    )
+                        'action'      => 'get_categories',
+                    ]
                 ),
                 CURLOPT_RETURNTRANSFER => true,
-            )
+            ]
         );
-        $response = curl_exec($ch);
+        $response    = curl_exec($ch);
         $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
         if ($contentType !== 'application/json') {
             return null;
@@ -51,19 +52,19 @@ class Communicator
         $ch = curl_init($this->site->getUrl());
         curl_setopt_array(
             $ch,
-            array(
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => http_build_query(
-                    array(
+            [
+                CURLOPT_POST           => true,
+                CURLOPT_POSTFIELDS     => http_build_query(
+                    [
                         'yuno_secret' => $this->site->getSecret(),
-                        'action' => 'set_banners',
-                        'banners' => serialize($banners),
-                    )
+                        'action'      => 'set_banners',
+                        'banners'     => serialize($banners),
+                    ]
                 ),
                 CURLOPT_RETURNTRANSFER => true,
-            )
+            ]
         );
-        $response = curl_exec($ch);
+        $response    = curl_exec($ch);
         $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
         if ($contentType !== 'application/json') {
             return false;

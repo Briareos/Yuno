@@ -26,31 +26,31 @@ class Filter
     const BLOCK_NO_ACTIVE_SITES = 16;
     const PASS = null;
 
-    private static $statuses = array(
-        self::BLOCK_BANNED_CITY => 'banned city',
-        self::BLOCK_BANNED_REGION => 'banned region',
-        self::BLOCK_BANNED_COUNTRY => 'banned country',
+    private static $statuses = [
+        self::BLOCK_BANNED_CITY                  => 'banned city',
+        self::BLOCK_BANNED_REGION                => 'banned region',
+        self::BLOCK_BANNED_COUNTRY               => 'banned country',
         // @TODO implement self::BLOCK_BANNED_IP => 'banned ip',
-        self::BLOCK_DUPLICATE_IP => 'duplicate ip',
+        self::BLOCK_DUPLICATE_IP                 => 'duplicate ip',
         self::BLOCK_CAMPAIGN_GROUP_QUOTA_REACHED => 'quota reached',
         // @TODO implement self::BLOCK_REQUEST_URI_SUSPICIOUS => 'request uri suspicious',
-        self::BLOCK_HAS_COOKIES => 'has cookies',
-        self::BLOCK_INVALID_REFERRER => 'invalid referrer',
-        self::BLOCK_BANNED_USER_AGENT => 'banned user agent',
+        self::BLOCK_HAS_COOKIES                  => 'has cookies',
+        self::BLOCK_INVALID_REFERRER             => 'invalid referrer',
+        self::BLOCK_BANNED_USER_AGENT            => 'banned user agent',
         // @TODO implement self::BLOCK_PROXY_DETECTED => 'proxy detected',
-        self::BLOCK_LOCATION_NOT_RECOGNIZED => 'unknown location',
+        self::BLOCK_LOCATION_NOT_RECOGNIZED      => 'unknown location',
         // @TODO implement self::BLOCK_GROUP_NOT_ACTIVE => 'group not active',
-        self::BLOCK_CAMPAIGN_NOT_ACTIVE => 'campaign inactive',
-        self::BLOCK_OUT_OF_SCHEDULE => 'out of schedule',
-        self::BLOCK_NO_ACTIVE_SITES => 'no active sites',
-        self::PASS => 'passed',
-    );
+        self::BLOCK_CAMPAIGN_NOT_ACTIVE          => 'campaign inactive',
+        self::BLOCK_OUT_OF_SCHEDULE              => 'out of schedule',
+        self::BLOCK_NO_ACTIVE_SITES              => 'no active sites',
+        self::PASS                               => 'passed',
+    ];
 
     private $request;
 
     private $campaignGroup;
 
-    private $log = array();
+    private $log = [];
 
     private $em;
 
@@ -63,10 +63,10 @@ class Filter
 
     public function __construct(Request $request, CampaignGroup $campaignGroup, EntityManager $em, $time = 'now')
     {
-        $this->request = $request;
+        $this->request       = $request;
         $this->campaignGroup = $campaignGroup;
-        $this->em = $em;
-        $this->time = $time;
+        $this->em            = $em;
+        $this->time          = $time;
     }
 
     private function addLog($log)
@@ -226,8 +226,8 @@ class Filter
             return false;
         }
 
-        $city = $this->request->server->get('GEOIP_CITY');
-        $region = $this->request->server->get('GEOIP_REGION');
+        $city    = $this->request->server->get('GEOIP_CITY');
+        $region  = $this->request->server->get('GEOIP_REGION');
         $country = $this->request->server->get('GEOIP_COUNTRY_CODE');
 
         foreach ($blacklistedCities as $blacklistedCity) {
@@ -247,8 +247,8 @@ class Filter
 
     private function isDuplicateIp()
     {
-        $days = 21;
-        $duplicate = $this->em->createQuery('Select c.id From MainBundle:Click c Where c.createdAt > :date And c.ip = :ip')
+        $days      = 21;
+        $duplicate = $this->em->createQuery('SELECT c.id FROM MainBundle:Click c WHERE c.createdAt > :DATE AND c.ip = :ip')
             ->setMaxResults(1)
             ->setParameter('date', new \DateTime(sprintf('-%s days', $days)))
             ->setParameter('ip', $this->request->server->get('REMOTE_ADDR'))
@@ -265,7 +265,7 @@ class Filter
 
     private function isCampaignGroupQuotaReached()
     {
-        $count = $this->em->createQuery('Select Count(c.id) From MainBundle:Click c Inner Join c.banner b Where c.createdAt > :date And c.blocked Is Null And b.group = :group')
+        $count = $this->em->createQuery('SELECT Count(c.id) FROM MainBundle:Click c INNER JOIN c.banner b WHERE c.createdAt > :DATE AND c.blocked IS NULL AND b.group = :GROUP')
             ->setParameter('date', $this->campaignGroup->getCampaign()->getPreviousMidnight())
             ->setParameter('group', $this->campaignGroup->getBannerGroup())
             ->getSingleScalarResult();
@@ -329,8 +329,8 @@ class Filter
         }
         $timezone = new \DateTimeZone($this->campaignGroup->getCampaign()->getTimezone());
         foreach ($schedules as $schedule) {
-            $startTime = new \DateTime($schedule['startTime'], $timezone);
-            $endTime = new \DateTime($schedule['endTime'], $timezone);
+            $startTime   = new \DateTime($schedule['startTime'], $timezone);
+            $endTime     = new \DateTime($schedule['endTime'], $timezone);
             $currentTime = new \DateTime($this->time, $timezone);
             if ($currentTime >= $startTime && $currentTime <= $endTime) {
                 $this->addLog(sprintf('Schedule check: Scheduled interval found, from %s to %s, timezone: %s.', $startTime->format('H:i:s'), $endTime->format('H:i:s'), $timezone->getName()));
@@ -357,14 +357,14 @@ class Filter
 
     private function isUserAgentBanned()
     {
-        $userAgent = $this->request->server->get('HTTP_USER_AGENT');
-        $bannedUserAgents = array(
+        $userAgent        = $this->request->server->get('HTTP_USER_AGENT');
+        $bannedUserAgents = [
             'msnbot',
             'bingbot',
             'crawler',
             'slurp',
             'yahoo',
-        );
+        ];
         foreach ($bannedUserAgents as $bannedUserAgent) {
             if (stripos($userAgent, $bannedUserAgent) !== false) {
                 $this->addLog(sprintf('User agent check: user agent is banned, matches filter "%s".', htmlentities($bannedUserAgent, ENT_QUOTES, 'UTF-8')));

@@ -30,7 +30,7 @@ class CampaignGroupType extends AbstractType
                 if ($campaignGroup === null) {
                     return;
                 }
-                $banners = $campaignGroup->getBanners();
+                $banners        = $campaignGroup->getBanners();
                 $dispersionForm = $factory->createNamed('clickDispersion', 'form');
                 foreach ($banners as $banner) {
                     $dispersionForm->add(
@@ -38,9 +38,9 @@ class CampaignGroupType extends AbstractType
                             $banner->getId(),
                             'text',
                             null,
-                            array(
+                            [
                                 //'disabled' => !$banner->getSite()->getActive()
-                            )
+                            ]
                         )
                     );
                 }
@@ -52,12 +52,10 @@ class CampaignGroupType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array(
-                'class' => 'Yuno\MainBundle\Entity\CampaignGroup',
+            [
+                'class'      => 'Yuno\MainBundle\Entity\CampaignGroup',
                 'data_class' => 'Yuno\MainBundle\Entity\CampaignGroup',
-            )
+            ]
         );
     }
-
-
 }

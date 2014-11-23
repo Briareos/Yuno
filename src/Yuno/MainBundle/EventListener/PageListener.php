@@ -7,8 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PageListener
 {
-    private $pages;
 
+    private $pages;
 
     function __construct($pages)
     {
@@ -22,21 +22,21 @@ class PageListener
             $path = '/home.php';
         }
         if (!preg_match('{^/[a-z0-9_-]+\.(?:php|html|css|js)$}i', $path)
-          && !preg_match('{^/(?:images|img)/[a-z0-9_/-]+\.(?:jpg|jpeg|png|gif)$}i', $path)
-          && !preg_match('{^/(?:style|css)/[a-z0-9_-]+\.css$}i', $path)
-          && !preg_match('{^/js/[a-z0-9_\.-]+\.js$}i', $path)
-          && !preg_match('{^/[a-z0-9]+\.xml$}i', $path)
-          && !preg_match('{^/fonts?/[a-z0-9_\.-]+\.(woff|ttf|svg|eot)$}i', $path)
-          && !(preg_match('{^/favicon\.(ico|png)$}', $path, $matches) && file_exists($this->pages . $matches[0]))
+            && !preg_match('{^/(?:images|img)/[a-z0-9_/-]+\.(?:jpg|jpeg|png|gif)$}i', $path)
+            && !preg_match('{^/(?:style|css)/[a-z0-9_-]+\.css$}i', $path)
+            && !preg_match('{^/js/[a-z0-9_\.-]+\.js$}i', $path)
+            && !preg_match('{^/[a-z0-9]+\.xml$}i', $path)
+            && !preg_match('{^/fonts?/[a-z0-9_\.-]+\.(woff|ttf|svg|eot)$}i', $path)
+            && !(preg_match('{^/favicon\.(ico|png)$}', $path, $matches) && file_exists($this->pages.$matches[0]))
         ) {
             return;
         }
-        $file = $this->pages . '/' . $path;
+        $file = $this->pages.'/'.$path;
         if (!file_exists($file)) {
             return;
         }
         $contentType = 'text/html';
-        $extension = pathinfo($file, PATHINFO_EXTENSION);
+        $extension   = pathinfo($file, PATHINFO_EXTENSION);
         if ($extension === 'css') {
             $contentType = 'text/css';
         } elseif ($extension === 'js') {
@@ -73,9 +73,9 @@ class PageListener
         } else {
             $responseContent = file_get_contents($file);
         }
-        $response = new Response($responseContent, 200, array(
+        $response = new Response($responseContent, 200, [
             'Content-Type' => $contentType,
-        ));
+        ]);
         $event->setResponse($response);
     }
 }

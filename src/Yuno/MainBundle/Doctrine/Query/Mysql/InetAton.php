@@ -13,9 +13,9 @@ class InetAton extends FunctionNode
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
 
-        return 'INET_ATON(' . $sqlWalker->walkStringPrimary(
+        return 'INET_ATON('.$sqlWalker->walkStringPrimary(
             $this->arithmeticExpression
-        ) . ')';
+        ).')';
     }
 
     public function parse(\Doctrine\ORM\Query\Parser $parser)
@@ -30,5 +30,4 @@ class InetAton extends FunctionNode
 
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
-
 }

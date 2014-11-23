@@ -20,9 +20,9 @@ class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'autocomplete' => false,
-            )
+            ]
         );
     }
 
@@ -30,6 +30,4 @@ class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
     {
         $view->vars['autocomplete'] = $options['autocomplete'];
     }
-
-
 }

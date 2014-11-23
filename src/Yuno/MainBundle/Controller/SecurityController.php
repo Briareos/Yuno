@@ -15,6 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class SecurityController extends Controller
 {
+
     /**
      * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
      *
@@ -54,10 +55,10 @@ class SecurityController extends Controller
 
         $lastUsername = (null === $this->session) ? '' : $this->session->get(SecurityContext::LAST_USERNAME);
 
-        return array(
+        return [
             'last_username' => $lastUsername,
-            'error' => $error,
-        );
+            'error'         => $error,
+        ];
     }
 
     /**

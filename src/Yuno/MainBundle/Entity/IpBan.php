@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IpBan
 {
+
     /**
      * @var integer
      */
@@ -34,12 +35,10 @@ class IpBan
      */
     private $subnet;
 
-
     private function __construct()
     {
         $this->createdAt = new \DateTime();
     }
-
 
     /**
      * Get id
@@ -55,6 +54,7 @@ class IpBan
      * Set createdAt
      *
      * @param \DateTime $createdAt
+     *
      * @return IpBan
      */
     public function setCreatedAt($createdAt)
@@ -78,6 +78,7 @@ class IpBan
      * Set ipv4
      *
      * @param string $ipv4
+     *
      * @return IpBan
      */
     public function setIpv4($ipv4)
@@ -101,6 +102,7 @@ class IpBan
      * Set ipv6
      *
      * @param string $ipv6
+     *
      * @return IpBan
      */
     public function setIpv6($ipv6)
@@ -124,6 +126,7 @@ class IpBan
      * Set subnet
      *
      * @param integer $subnet
+     *
      * @return IpBan
      */
     public function setSubnet($subnet)

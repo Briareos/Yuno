@@ -12,8 +12,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SiteType extends AbstractType
 {
-    private $securityContext;
 
+    private $securityContext;
 
     function __construct(SecurityContextInterface $securityContext)
     {
@@ -23,35 +23,32 @@ class SiteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-          ->add('name')
-          ->add('url', 'url')
-          ->add(
-            'active',
-            null,
-            array(
-                'required' => false,
+            ->add('name')
+            ->add('url', 'url')
+            ->add(
+                'active',
+                null,
+                [
+                    'required' => false,
+                ]
             )
-        )
-          ->add('secret');
-
-        $factory = $builder->getFormFactory();
+            ->add('secret');
 
         $builder->addEventListener(
             FormEvents::POST_SET_DATA,
-            function (FormEvent $event) use ($factory) {
+            function (FormEvent $event)  {
                 /** @var $site \Yuno\MainBundle\Entity\Site */
-                $site = $event->getData();
-                $data = null;
-                $form = $event->getForm();
-                $options = array(
+                $site    = $event->getData();
+                $data    = null;
+                $form    = $event->getForm();
+                $options = [
                     'class' => 'MainBundle:User',
-                );
+                ];
                 if ($site->getUser() === null) {
                     $data = $this->securityContext->getToken()->getUser();
-
                 }
                 if (!$this->securityContext->isGranted('ROLE_SITE_EDIT_ALL')) {
-                    $options['read_only'] = true;
+                    $options['read_only']     = true;
                     $options['query_builder'] = function (UserRepository $er) {
                         $qb = $er->createQueryBuilder('u');
                         $qb->where('u = :user');
@@ -60,14 +57,8 @@ class SiteType extends AbstractType
                         return $qb;
                     };
                 }
-                $form->add(
-                    $factory->createNamed(
-                        'user',
-                        'entity',
-                        $data,
-                        $options
-                    )
-                );
+                $options['data'] = $data;
+                $form->add('user', 'entity', $options);
             }
         );
     }
@@ -75,9 +66,9 @@ class SiteType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Yuno\MainBundle\Entity\Site'
-            )
+            ]
         );
     }
 

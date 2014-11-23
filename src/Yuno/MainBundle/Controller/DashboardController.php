@@ -18,6 +18,7 @@ use Yuno\MainBundle\Paginator\PaginatorHelper;
  */
 class DashboardController extends Controller
 {
+
     /**
      * @var \Doctrine\ORM\EntityManager
      *
@@ -32,6 +33,6 @@ class DashboardController extends Controller
      */
     public function dashboardAction()
     {
-        return array();
+        return [];
     }
 }

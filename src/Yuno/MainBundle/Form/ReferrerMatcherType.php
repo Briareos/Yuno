@@ -22,40 +22,40 @@ class ReferrerMatcherType extends AbstractType
         $builder->add(
             'type',
             'choice',
-            array(
-                'constraints' => array(
+            [
+                'constraints'          => [
                     new \Symfony\Component\Validator\Constraints\NotBlank(),
-                ),
-                'choices' => array(
+                ],
+                'choices'              => [
                     'starts' => "Start with",
-                    'regex' => "Match regex",
-                ),
-                'attr' => array(
+                    'regex'  => "Match regex",
+                ],
+                'attr'                 => [
                     'class' => '',
-                ),
-                'label_render' => false,
-                'widget_controls' => false,
+                ],
+                'label_render'         => false,
+                'widget_controls'      => false,
                 'widget_control_group' => false,
-            )
+            ]
         );
         $builder->add(
             'pattern',
             'text',
-            array(
-                'constraints' => array(
+            [
+                'constraints'          => [
                     new \Symfony\Component\Validator\Constraints\NotBlank(),
-                ),
-                'widget_addon' => array(
+                ],
+                'widget_addon'         => [
                     'type' => 'append',
                     'icon' => 'filter'
-                ),
-                'attr' => array(
+                ],
+                'attr'                 => [
                     'class' => '',
-                ),
-                'label_render' => false,
-                'widget_controls' => false,
+                ],
+                'label_render'         => false,
+                'widget_controls'      => false,
                 'widget_control_group' => false,
-            )
+            ]
         );
 
         $factory = $builder->getFormFactory();
@@ -67,8 +67,8 @@ class ReferrerMatcherType extends AbstractType
                 if (empty($data)) {
                     return;
                 }
-                $form = $event->getForm();
-                $constraints = array();
+                $form          = $event->getForm();
+                $constraints   = [];
                 $constraints[] = new \Symfony\Component\Validator\Constraints\NotBlank();
                 if ($data['type'] === 'regex') {
                     $constraints[] = new \Yuno\MainBundle\Validator\Constraints\IsRegex();
@@ -79,18 +79,18 @@ class ReferrerMatcherType extends AbstractType
                         'pattern',
                         'text',
                         null,
-                        array(
-                            'constraints' => $constraints,
-                            'widget_addon' => array(
+                        [
+                            'constraints'          => $constraints,
+                            'widget_addon'         => [
                                 'type' => 'append',
                                 'icon' => 'filter'
-                            ),
-                            'attr' => array(
+                            ],
+                            'attr'                 => [
                                 'class' => '',
-                            ),
-                            'widget_controls' => false,
+                            ],
+                            'widget_controls'      => false,
                             'widget_control_group' => false,
-                        )
+                        ]
                     )
                 );
             }
@@ -100,11 +100,9 @@ class ReferrerMatcherType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'prototype' => false,
-            )
+            ]
         );
     }
-
-
 }

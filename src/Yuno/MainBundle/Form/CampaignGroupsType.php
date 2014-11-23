@@ -20,21 +20,19 @@ class CampaignGroupsType extends AbstractType
         $builder->add(
             'campaignGroups',
             'collection',
-            array(
-                'type' => new CampaignGroupType(),
+            [
+                'type'         => new CampaignGroupType(),
                 'by_reference' => false,
-            )
+            ]
         );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'class' => 'Yuno\MainBundle\Entity\Campaign',
-            )
+            ]
         );
     }
-
-
 }

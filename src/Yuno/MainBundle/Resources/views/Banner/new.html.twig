@@ -10,17 +10,23 @@
                 var $humanUrl = $('#banner_humanUrl');
                 var $botUrl = $('#banner_botUrl');
                 var $size = $('#banner_size');
+                var text = $code.val();
+
+                if (text.indexOf('<a') === -1) {
+                    return;
+                }
+
                 $humanUrl.prop('disabled', true);
                 $botUrl.prop('disabled', true);
                 $size.prop('disabled', true);
 
                 $.ajax({
-                    url:'{{ path('banner_guess_info') }}',
-                    data:{
-                        code:$code.val()
+                    url: '{{ path('banner_guess_info') }}',
+                    data: {
+                        code: text
                     },
-                    type:'POST',
-                    success:function (data) {
+                    type: 'POST',
+                    success: function (data) {
                         if (data.botUrl) {
                             $botUrl.val(data.botUrl);
                         } else {

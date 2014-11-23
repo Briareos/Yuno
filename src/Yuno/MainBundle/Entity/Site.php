@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Site
 {
+
     /**
      * @var integer
      */
@@ -54,7 +55,6 @@ class Site
      */
     private $active;
 
-
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -79,6 +79,7 @@ class Site
      * Set name
      *
      * @param string $name
+     *
      * @return Site
      */
     public function setName($name)
@@ -102,6 +103,7 @@ class Site
      * Set url
      *
      * @param string $url
+     *
      * @return Site
      */
     public function setUrl($url)
@@ -202,7 +204,7 @@ class Site
 
     public function getCategoryById($categoryId)
     {
-        $categoryId = (int)$categoryId;
+        $categoryId = (int) $categoryId;
         if ($categoryId === -1) {
             return 'Site-wide';
         } elseif ($categoryId === 0) {

@@ -15,16 +15,16 @@ class ClickRepository extends EntityRepository
     public function getCountsForCampaignByBanner(Campaign $campaign, \DateTime $dateStart, \DateTime $dateEnd)
     {
         $result = $this->getEntityManager()
-          ->getConnection()
-          ->executeQuery(
-            'SELECT b.id, COUNT(c.id) As total FROM click c INNER JOIN banner b ON c.banner_id = b.id WHERE c.campaign_id = :campaign_id AND c.blocked IS NULL AND c.createdAt BETWEEN :date_start AND :date_end GROUP BY b.id',
-            array(
-                'campaign_id' => $campaign->getId(),
-                'date_start' => $dateStart->format('Y-m-d H:i:s'),
-                'date_end' => $dateEnd->format('Y-m-d H:i:s'),
+            ->getConnection()
+            ->executeQuery(
+                'SELECT b.id, COUNT(c.id) AS total FROM click c INNER JOIN banner b ON c.banner_id = b.id WHERE c.campaign_id = :campaign_id AND c.blocked IS NULL AND c.createdAt BETWEEN :date_start AND :date_end GROUP BY b.id',
+                [
+                    'campaign_id' => $campaign->getId(),
+                    'date_start'  => $dateStart->format('Y-m-d H:i:s'),
+                    'date_end'    => $dateEnd->format('Y-m-d H:i:s'),
+                ]
             )
-        )
-          ->fetchAll(\PDO::FETCH_KEY_PAIR);
+            ->fetchAll(\PDO::FETCH_KEY_PAIR);
 
         return $result;
     }
@@ -32,17 +32,17 @@ class ClickRepository extends EntityRepository
     public function getCountsForCampaignByGroup(Campaign $campaign, \DateTime $dateStart, \DateTime $dateEnd)
     {
         $counts = $this->getEntityManager()
-          ->getConnection()
-          ->executeQuery(
-            'SELECT b.group_id, COUNT(c.id) As total, SUM(c.blocked Is Null) AS green, SUM(c.blocked IS NOT NULL) AS red FROM click c INNER JOIN banner b ON c.banner_id = b.id WHERE c.campaign_id = :campaign_id AND c.createdAt BETWEEN :date_start AND :date_end GROUP BY b.group_id',
-            array(
-                'campaign_id' => $campaign->getId(),
-                'date_start' => $dateStart->format('Y-m-d H:i:s'),
-                'date_end' => $dateEnd->format('Y-m-d H:i:s'),
+            ->getConnection()
+            ->executeQuery(
+                'SELECT b.group_id, COUNT(c.id) AS total, SUM(c.blocked IS NULL) AS green, SUM(c.blocked IS NOT NULL) AS red FROM click c INNER JOIN banner b ON c.banner_id = b.id WHERE c.campaign_id = :campaign_id AND c.createdAt BETWEEN :date_start AND :date_end GROUP BY b.group_id',
+                [
+                    'campaign_id' => $campaign->getId(),
+                    'date_start'  => $dateStart->format('Y-m-d H:i:s'),
+                    'date_end'    => $dateEnd->format('Y-m-d H:i:s'),
+                ]
             )
-        )
-          ->fetchAll();
-        $result = array();
+            ->fetchAll();
+        $result = [];
         foreach ($counts as $count) {
             $result[$count['group_id']] = $count;
         }

@@ -13,8 +13,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class BannerType extends AbstractType
 {
-    private $securityContext;
 
+    private $securityContext;
 
     function __construct(SecurityContextInterface $securityContext)
     {
@@ -24,70 +24,53 @@ class BannerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-          ->add(
-            'code',
-            'textarea',
-            array(
-                'attr' => array(
-                    'rows' => 4,
-                )
+            ->add('code', 'textarea', [
+                    'attr' => [
+                        'rows' => 4,
+                    ]
+                ]
             )
-        )
-          ->add(
-            'size',
-            'choice',
-            array(
-                'choices' => Banner::getAvailableSizes(),
+            ->add('size', 'choice', [
+                    'choices' => Banner::getAvailableSizes(),
+                ]
             )
-        )
-          ->add(
-            'humanUrl',
-            'textarea',
-            array(
-                'attr' => array(
-                    'rows' => 2,
-                )
+            ->add('humanUrl', 'textarea', [
+                    'attr' => [
+                        'rows' => 2,
+                    ]
+                ]
             )
-        )
-          ->add('botUrl');
-
-        $factory = $builder->getFormFactory();
+            ->add('botUrl');
 
         $builder->addEventListener(
             FormEvents::POST_SET_DATA,
-            function (FormEvent $event) use ($factory) {
+            function (FormEvent $event) {
                 /** @var $banner Banner */
                 $banner = $event->getData();
-                $form = $event->getForm();
+                $form   = $event->getForm();
                 if ($banner->getSite() === null) {
                     $data = $this->securityContext->getToken()->getUser()->getSelectedSite();
                 } else {
                     $data = $banner->getSite();
                 }
-                $form->add(
-                    $factory->createNamed(
-                        'site',
-                        'entity',
-                        $data,
-                        array(
-                            'class' => 'MainBundle:Site',
-                            'read_only' => true,
-                            'query_builder' => function (SiteRepository $er) use ($data) {
-                                $qb = $er->createQueryBuilder('s');
-                                $qb->where('s = :site');
-                                $qb->setParameter('site', $data);
+                $form->add('site', 'entity', [
+                    'data'          => $data,
+                    'class'         => 'MainBundle:Site',
+                    'read_only'     => true,
+                    'query_builder' => function (SiteRepository $er) use ($data) {
+                        $qb = $er->createQueryBuilder('s');
+                        $qb->where('s = :site');
+                        $qb->setParameter('site', $data);
 
-                                return $qb;
-                            }
-                        )
-                    )
-                );
+                        return $qb;
+                    }
+                ]);
             }
         );
 
         $builder->addEventListener(
             FormEvents::POST_SET_DATA,
-            function (FormEvent $event) use ($factory) {
+            function (FormEvent $event) {
                 /** @var $banner Banner */
                 $banner = $event->getData();
                 if ($banner->getSite() === null) {
@@ -99,37 +82,28 @@ class BannerType extends AbstractType
                 if ($data === null) {
                     $data = -1;
                 }
-                $choices = array(
+                $choices = [
                     -1 => "Site-wide",
-                );
+                ];
                 if ($site->getCategories()) {
                     $choices["Categories"] = $site->getCategories();
                 }
                 $form = $event->getForm();
-                $form->add(
-                    $factory->createNamed(
-                        'category',
-                        'choice',
-                        $banner->getCategory(),
-                        array(
-                            'choices' => $choices,
-                            'required' => false,
-                            'empty_value' => 'Pages',
-                            'data' => $data,
-                        )
-                    )
-                );
+                $form->add('category', 'choice', [
+                    'data'        => $data,
+                    'choices'     => $choices,
+                    'required'    => false,
+                    'empty_value' => 'Pages',
+                ]);
             }
         );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'data_class' => 'Yuno\MainBundle\Entity\Banner'
-            )
-        );
+        $resolver->setDefaults([
+            'data_class' => 'Yuno\MainBundle\Entity\Banner'
+        ]);
     }
 
     public function getName()

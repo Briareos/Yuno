@@ -11,41 +11,41 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-          ->add(
-            'username',
-            null,
-            array(
-                'attr' => array(
-                    'autocomplete' => "off",
-                )
+            ->add(
+                'username',
+                null,
+                [
+                    'attr' => [
+                        'autocomplete' => "off",
+                    ]
+                ]
             )
-        )
-          ->add(
-            'plainPassword',
-            'repeated',
-            array(
-                'type' => 'password',
-                'required' => false,
+            ->add(
+                'plainPassword',
+                'repeated',
+                [
+                    'type'     => 'password',
+                    'required' => false,
+                ]
             )
-        )
-          ->add('email')
-          ->add('locale', 'locale')
-          ->add(
-            'timezone',
-            'timezone',
-            array()
-        )
-          ->add('roles', 'roles',array(
-                'expanded'=>true,
-            ));
+            ->add('email')
+            ->add('locale', 'locale')
+            ->add(
+                'timezone',
+                'timezone',
+                []
+            )
+            ->add('roles', 'roles', [
+                'expanded' => true,
+            ]);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Yuno\MainBundle\Entity\User'
-            )
+            ]
         );
     }
 

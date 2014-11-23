@@ -8,6 +8,7 @@ namespace Yuno\MainBundle\Util;
  */
 class Encoder
 {
+
     private $key;
 
     public function __construct($key)
@@ -32,11 +33,11 @@ class Encoder
 
         # Strip padding out.
         $block = mcrypt_get_block_size('des', 'ecb');
-        $pad = ord($str[($len = strlen($str)) - 1]);
+        $pad   = ord($str[($len = strlen($str)) - 1]);
         if ($pad && $pad < $block && preg_match(
-            '/' . chr($pad) . '{' . $pad . '}$/',
-            $str
-        )
+                '/'.chr($pad).'{'.$pad.'}$/',
+                $str
+            )
         ) {
             return substr($str, 0, strlen($str) - $pad);
         }

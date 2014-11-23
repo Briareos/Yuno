@@ -22,6 +22,4 @@ class ClickDispersionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
     }
-
-
 }

@@ -133,14 +133,14 @@ class ClickListener
                 $url     = rtrim($siteUrl, '/').'/?'.$this->encoder->encrypt(
                         implode(
                             '#',
-                            array(
+                            [
                                 'yuno',
                                 time(),
                                 $click->getIp(),
                                 $banner->getHumanUrl(),
                                 $banner->getId(),
                                 0,
-                            )
+                            ]
                         )
                     );
             } else {

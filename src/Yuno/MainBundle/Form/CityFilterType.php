@@ -20,49 +20,49 @@ class CityFilterType extends AbstractType
         $builder->add(
             'country',
             'country',
-            array(
-                'label' => "Country",
-                'constraints' => array(
+            [
+                'label'                => "Country",
+                'constraints'          => [
                     new \Symfony\Component\Validator\Constraints\NotBlank(),
-                ),
-                'widget_prefix' => "Country",
-                'attr' => array(
-                    'class' => 'chosen',
+                ],
+                'widget_prefix'        => "Country",
+                'attr'                 => [
+                    'class'            => 'chosen',
                     'data-placeholder' => "Country",
-                ),
-                'required' => true,
-                'label_render' => false,
+                ],
+                'required'             => true,
+                'label_render'         => false,
                 'widget_control_group' => false,
-            )
+            ]
         );
         $builder->add(
             'city',
             'text',
-            array(
-                'required' => true,
-                'constraints' => array(
+            [
+                'required'             => true,
+                'constraints'          => [
                     new \Symfony\Component\Validator\Constraints\NotBlank(),
-                ),
-                'widget_prefix' => "City",
-                'label_render' => false,
+                ],
+                'widget_prefix'        => "City",
+                'label_render'         => false,
                 'widget_control_group' => false,
-            )
+            ]
         );
         $builder->add(
             'region',
             'choice',
-            array(
-                'choices' => Campaign::getAvailableRegions(),
-                'required' => false,
-                'label' => "State/region list (only for United States and Canada)",
-                'attr' => array(
-                    'class' => 'chosen',
+            [
+                'choices'              => Campaign::getAvailableRegions(),
+                'required'             => false,
+                'label'                => "State/region list (only for United States and Canada)",
+                'attr'                 => [
+                    'class'            => 'chosen',
                     'data-placeholder' => "State/region",
-                ),
-                'widget_prefix' => "State/region (US/CA only)",
-                'label_render' => false,
+                ],
+                'widget_prefix'        => "State/region (US/CA only)",
+                'label_render'         => false,
                 'widget_control_group' => false,
-            )
+            ]
         );
 
         $factory = $builder->getFormFactory();
@@ -74,8 +74,8 @@ class CityFilterType extends AbstractType
                 if (empty($data)) {
                     return;
                 }
-                $form = $event->getForm();
-                $constraints = array();
+                $form        = $event->getForm();
+                $constraints = [];
                 if ($data['country'] === 'US' || $data['country'] === 'CA') {
                     $constraints[] = new \Symfony\Component\Validator\Constraints\NotBlank();
                 }
@@ -85,22 +85,21 @@ class CityFilterType extends AbstractType
                         'region',
                         'choice',
                         null,
-                        array(
-                            'constraints' => $constraints,
-                            'choices' => Campaign::getAvailableRegions(),
-                            'required' => false,
-                            'label' => "State/region list (only for United States and Canada)",
-                            'attr' => array(
-                                'class' => 'chosen',
+                        [
+                            'constraints'          => $constraints,
+                            'choices'              => Campaign::getAvailableRegions(),
+                            'required'             => false,
+                            'label'                => "State/region list (only for United States and Canada)",
+                            'attr'                 => [
+                                'class'            => 'chosen',
                                 'data-placeholder' => "State/region",
-                            ),
-                            'widget_prefix' => "State/region (US/CA only)",
+                            ],
+                            'widget_prefix'        => "State/region (US/CA only)",
                             'widget_control_group' => false,
-                        )
+                        ]
                     )
                 );
             }
         );
     }
-
 }

@@ -77,7 +77,7 @@
                     <td title="Campaign timezone: {{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', entity.campaign.timezone) }}">
                         {{ entity.createdAt|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}
                         <br>
-                        <span class="muted">{{ entity.createdAt|dateage }} ago</span>
+                        <span class="muted">{{ entity.createdAt|time_diff }} ago</span>
                     </td>
                     <td style="overflow: hidden; text-overflow: ellipsis;">{{ entity.referrer }}</td>
                     <td>{{ entity.ip }}</td>

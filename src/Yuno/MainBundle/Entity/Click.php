@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Click
 {
+
     /**
      * @var integer
      */
@@ -84,11 +85,10 @@ class Click
      */
     private $log;
 
-
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->blocked = 0;
+        $this->blocked   = 0;
     }
 
     /**
@@ -105,6 +105,7 @@ class Click
      * Set createdAt
      *
      * @param \DateTime $createdAt
+     *
      * @return Click
      */
     public function setCreatedAt($createdAt)
@@ -128,6 +129,7 @@ class Click
      * Set referrer
      *
      * @param string $referrer
+     *
      * @return Click
      */
     public function setReferrer($referrer)
@@ -151,6 +153,7 @@ class Click
      * Set ip
      *
      * @param string $ip
+     *
      * @return Click
      */
     public function setIp($ip)
@@ -174,6 +177,7 @@ class Click
      * Set country
      *
      * @param string $country
+     *
      * @return Click
      */
     public function setCountry($country)
@@ -197,6 +201,7 @@ class Click
      * Set region
      *
      * @param string $region
+     *
      * @return Click
      */
     public function setRegion($region)

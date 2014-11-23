@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class   Campaign
 {
+
     /**
      * @var integer
      */
@@ -80,15 +81,14 @@ class   Campaign
      */
     private $allowEmptyReferrer;
 
-
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
-        $this->clicks = new ArrayCollection();
+        $this->createdAt      = new \DateTime();
+        $this->clicks         = new ArrayCollection();
         $this->campaignGroups = new ArrayCollection();
-        $this->schedule = array();
-        $this->countryList = array();
-        $this->referrerList = array();
+        $this->schedule       = [];
+        $this->countryList    = [];
+        $this->referrerList   = [];
     }
 
     /**
@@ -105,6 +105,7 @@ class   Campaign
      * Set name
      *
      * @param string $name
+     *
      * @return Campaign
      */
     public function setName($name)
@@ -128,6 +129,7 @@ class   Campaign
      * Set createdAt
      *
      * @param \DateTime $createdAt
+     *
      * @return Campaign
      */
     public function setCreatedAt($createdAt)
@@ -151,6 +153,7 @@ class   Campaign
      * Set active
      *
      * @param boolean $active
+     *
      * @return Campaign
      */
     public function setActive($active)
@@ -325,8 +328,8 @@ class   Campaign
 
     public static function getAvailableRegions()
     {
-        return array(
-            "United States" => array(
+        return [
+            "United States" => [
                 "AA" => "Armed Forces Americas",
                 "AE" => "Armed Forces Europe, Middle East, & Canada",
                 "AK" => "Alaska",
@@ -389,8 +392,8 @@ class   Campaign
                 "WI" => "Wisconsin",
                 "WV" => "West Virginia",
                 "WY" => "Wyoming",
-            ),
-            "Canada" => array(
+            ],
+            "Canada"        => [
                 "AB" => "Alberta",
                 "BC" => "British Columbia",
                 "MB" => "Manitoba",
@@ -404,8 +407,8 @@ class   Campaign
                 "QC" => "Quebec",
                 "SK" => "Saskatchewan",
                 "YT" => "Yukon Territory",
-            ),
-        );
+            ],
+        ];
     }
 
     /**

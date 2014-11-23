@@ -23,6 +23,7 @@ use JMS\SecurityExtraBundle\Annotation\SecureParam;
  */
 class SiteController extends Controller
 {
+
     /**
      * @var \Doctrine\ORM\EntityManager
      *
@@ -70,10 +71,10 @@ class SiteController extends Controller
 
         $sites = $sitesQuery->execute();
 
-        return array(
+        return [
             'site_users' => $siteUsers,
-            'entities' => $sites,
-        );
+            'entities'   => $sites,
+        ];
     }
 
     /**
@@ -96,11 +97,11 @@ class SiteController extends Controller
         $siteUsersQuery->setParameter('user', $this->getUser());
         $siteUsers = $siteUsersQuery->execute();
 
-        return array(
-            'site_users' => $siteUsers,
-            'entities' => $sites,
+        return [
+            'site_users'    => $siteUsers,
+            'entities'      => $sites,
             'selected_user' => $user,
-        );
+        ];
     }
 
     /**
@@ -119,10 +120,10 @@ class SiteController extends Controller
         $siteUsersQuery->setParameter('user', $this->getUser());
         $siteUsers = $siteUsersQuery->execute();
 
-        return array(
+        return [
             'site_users' => $siteUsers,
-            'entities' => $sites,
-        );
+            'entities'   => $sites,
+        ];
     }
 
     /**
@@ -136,20 +137,20 @@ class SiteController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Site();
-        $form = $this->createForm(new SiteType($this->securityContext), $entity);
+        $form   = $this->createForm(new SiteType($this->securityContext), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
             $this->em->persist($entity);
             $this->em->flush();
 
-            return $this->redirect($this->generateUrl('site_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('site_show', ['id' => $entity->getId()]));
         }
 
-        return array(
+        return [
             'entity' => $entity,
-            'form' => $form->createView(),
-        );
+            'form'   => $form->createView(),
+        ];
     }
 
     /**
@@ -163,12 +164,12 @@ class SiteController extends Controller
     public function newAction()
     {
         $entity = new Site();
-        $form = $this->createForm(new SiteType($this->securityContext), $entity);
+        $form   = $this->createForm(new SiteType($this->securityContext), $entity);
 
-        return array(
+        return [
             'entity' => $entity,
-            'form' => $form->createView(),
-        );
+            'form'   => $form->createView(),
+        ];
     }
 
     /**
@@ -182,9 +183,9 @@ class SiteController extends Controller
      */
     public function showAction(Site $site)
     {
-        return array(
+        return [
             'entity' => $site,
-        );
+        ];
     }
 
     /**
@@ -200,10 +201,10 @@ class SiteController extends Controller
     {
         $editForm = $this->createForm(new SiteType($this->securityContext), $site);
 
-        return array(
+        return [
             'entity' => $site,
-            'form' => $editForm->createView(),
-        );
+            'form'   => $editForm->createView(),
+        ];
     }
 
     /**
@@ -226,13 +227,13 @@ class SiteController extends Controller
 
             $this->session->getFlashBag()->add('success', "Site updated.");
 
-            return $this->redirect($this->generateUrl('site_edit', array('id' => $site->getId())));
+            return $this->redirect($this->generateUrl('site_edit', ['id' => $site->getId()]));
         }
 
-        return array(
+        return [
             'entity' => $site,
-            'form' => $editForm->createView(),
-        );
+            'form'   => $editForm->createView(),
+        ];
     }
 
     /**
@@ -246,10 +247,10 @@ class SiteController extends Controller
     {
         $form = $this->createDeleteForm($site);
 
-        return array(
-            'entity' => $site,
+        return [
+            'entity'      => $site,
             'delete_form' => $form->createView(),
-        );
+        ];
     }
 
     /**
@@ -282,9 +283,9 @@ class SiteController extends Controller
      */
     private function createDeleteForm(Site $site)
     {
-        return $this->createFormBuilder(array('id' => $site->getId()))
-          ->add('id', 'hidden')
-          ->getForm();
+        return $this->createFormBuilder(['id' => $site->getId()])
+            ->add('id', 'hidden')
+            ->getForm();
     }
 
     /**
@@ -327,7 +328,7 @@ class SiteController extends Controller
     public function updateCategoriesAction(Request $request, Site $site)
     {
         $communicator = new Communicator($site);
-        $categories = $communicator->getCategories();
+        $categories   = $communicator->getCategories();
         if (is_array($categories) && count($categories)) {
             $site->setCategories($categories);
             $this->em->persist($site);
@@ -350,18 +351,18 @@ class SiteController extends Controller
     {
         $communicator = new Communicator($site);
         /** @var $banners \Yuno\MainBundle\Entity\Banner[] */
-        $banners = $this->em->getRepository('MainBundle:Banner')->findBy(array('site' => $site));
-        $bannerData = array();
+        $banners    = $this->em->getRepository('MainBundle:Banner')->findBy(['site' => $site]);
+        $bannerData = [];
         foreach ($banners as $banner) {
-            $bannerData[$banner->getId()] = array(
-                'id' => $banner->getId(),
-                'code' => $banner->getCode(),
-                'human' => $banner->getHumanUrl(),
-                'bot' => $banner->getBotUrl(),
+            $bannerData[$banner->getId()] = [
+                'id'       => $banner->getId(),
+                'code'     => $banner->getCode(),
+                'human'    => $banner->getHumanUrl(),
+                'bot'      => $banner->getBotUrl(),
                 'category' => $banner->getCategory(),
-                'group' => $banner->getGroup()->getName(),
-                'size' => $banner->getSize(),
-            );
+                'group'    => $banner->getGroup()->getName(),
+                'size'     => $banner->getSize(),
+            ];
         }
         $status = $communicator->setBanners($bannerData);
         if ($status) {
@@ -382,9 +383,9 @@ class SiteController extends Controller
      */
     public function loopbackSearchEngineAction(Site $site)
     {
-        return array(
+        return [
             'entity' => $site,
-        );
+        ];
     }
 
     /**
@@ -395,16 +396,16 @@ class SiteController extends Controller
      */
     public function loopbackYunoAction(Site $site, Request $request)
     {
-        $parameters = array(
+        $parameters = [
             'yuno',
             time(),
             $request->server->get('REMOTE_ADDR'),
-            $this->generateUrl('site_loopback_return', array('id' => $site->getId(), 'time' => microtime(true)), true),
+            $this->generateUrl('site_loopback_return', ['id' => $site->getId(), 'time' => microtime(true)], true),
             0,
             1,
-        );
+        ];
 
-        $url = rtrim($site->getUrl(), '/') . '/?' . $this->encoder->encrypt(implode('#', $parameters));
+        $url = rtrim($site->getUrl(), '/').'/?'.$this->encoder->encrypt(implode('#', $parameters));
 
         return $this->redirect($url);
     }
@@ -420,11 +421,11 @@ class SiteController extends Controller
     {
         $result = microtime(true) - (float) $time;
 
-        return array(
-            'entity' => $site,
-            'time' => $result,
+        return [
+            'entity'   => $site,
+            'time'     => $result,
             'referrer' => $request->server->get('HTTP_REFERER'),
-            'origin' => $request->server->get('HTTP_ORIGIN'),
-        );
+            'origin'   => $request->server->get('HTTP_ORIGIN'),
+        ];
     }
 }

@@ -13,7 +13,7 @@
     </form>
 
     <p>
-        The counter resets in <strong class="tooltip-me" data-title="{{ entity.getNextMidnight()|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.getNextMidnight()|dateage }}</strong>, at midnight in accordance to campaign's timezone (<em>{{ entity.timezone }}</em>).
+        The counter resets in <strong class="tooltip-me" data-title="{{ entity.getNextMidnight()|craue_datetime(user.locale, 'medium', 'medium', user.timezone) }}">{{ entity.getNextMidnight()|time_diff }}</strong>, at midnight in accordance to campaign's timezone (<em>{{ entity.timezone }}</em>).
     </p>
     <form action="{{ path('campaign_overview', { 'id': entity.id }) }}" method="post" {{ form_enctype(form) }}>
         <table class="table table-bordered">

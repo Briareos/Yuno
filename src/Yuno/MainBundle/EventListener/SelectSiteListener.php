@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 class SelectSiteListener
 {
+
     private $securityContext;
 
     private $controllerResolver;
@@ -17,9 +18,9 @@ class SelectSiteListener
 
     function __construct(SecurityContextInterface $securityContext, ControllerResolverInterface $controllerResolver, EntityManager $em)
     {
-        $this->securityContext = $securityContext;
+        $this->securityContext    = $securityContext;
         $this->controllerResolver = $controllerResolver;
-        $this->em = $em;
+        $this->em                 = $em;
     }
 
     public function onKernelController(FilterControllerEvent $event)
@@ -41,7 +42,7 @@ class SelectSiteListener
 
         $controller = $event->getController();
         if (!$controller[0] instanceof \Yuno\MainBundle\Controller\BannerController
-          && !$controller[0] instanceof \Yuno\MainBundle\Controller\ClickController
+            && !$controller[0] instanceof \Yuno\MainBundle\Controller\ClickController
         ) {
             return;
         }

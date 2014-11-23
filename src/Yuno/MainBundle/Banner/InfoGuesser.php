@@ -4,6 +4,7 @@ namespace Yuno\MainBundle\Banner;
 
 class InfoGuesser
 {
+
     private $code;
 
     function __construct($code)
@@ -27,13 +28,13 @@ class InfoGuesser
         $ch = curl_init($this->guessHumanUrl());
         curl_setopt_array(
             $ch,
-            array(
+            [
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
-            )
+            ]
         );
         $response = curl_exec($ch);
-        $lastUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+        $lastUrl  = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
         curl_close($ch);
 
         preg_match('{<meta[^>]*http-equiv=([\'"])refresh\1[^>]*content=([\'"])\d+;[^>]*url=[\'"]?([^>]*)[\'"]?\2[^>]*>}ism', $response, $resultMetaRefresh);
@@ -47,19 +48,19 @@ class InfoGuesser
             }
         }
 
-        return strtolower('http://' . parse_url($lastUrl, PHP_URL_HOST));
+        return strtolower('http://'.parse_url($lastUrl, PHP_URL_HOST));
     }
 
     public function guessSize()
     {
-        $size = array();
+        $size = [];
 
         preg_match('{src=([\'""])(.*?)\1}i', $this->code, $resultImageSrc);
         if (!empty($resultImageSrc[2])) {
-            $imageSrc = $resultImageSrc[2];
+            $imageSrc  = $resultImageSrc[2];
             $imageSize = getimagesize($imageSrc);
             if (!empty($imageSize[0]) && !empty($imageSize[1])) {
-                $size = array($imageSize[0], $imageSize[1]);
+                $size = [$imageSize[0], $imageSize[1]];
             }
         }
 

@@ -10,13 +10,14 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class UserActivityListener
 {
+
     private $em;
 
     private $securityContext;
 
     public function __construct(EntityManager $em, SecurityContextInterface $securityContext)
     {
-        $this->em = $em;
+        $this->em              = $em;
         $this->securityContext = $securityContext;
     }
 

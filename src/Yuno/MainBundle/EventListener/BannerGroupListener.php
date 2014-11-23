@@ -10,6 +10,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 class BannerGroupListener
 {
+
     private $flush = false;
 
     public function prePersist(LifeCycleEventArgs $args)
@@ -20,7 +21,7 @@ class BannerGroupListener
             return;
         }
 
-        $groupName = $this->getGroupName($entity->getBotUrl());
+        $groupName   = $this->getGroupName($entity->getBotUrl());
         $bannerGroup = $this->findOrCreateBannerGroup($args->getEntityManager(), $groupName);
 
         if (!$bannerGroup->getId()) {
@@ -43,7 +44,7 @@ class BannerGroupListener
         }
 
         $oldBannerGroup = $entity->getGroup();
-        $groupName = $this->getGroupName($entity->getBotUrl());
+        $groupName      = $this->getGroupName($entity->getBotUrl());
 
         if ($oldBannerGroup->getName() === $groupName) {
             return;
