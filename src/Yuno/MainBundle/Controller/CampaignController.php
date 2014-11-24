@@ -658,7 +658,7 @@ class CampaignController extends Controller
                     'attr'          => [
                         'class' => 'datepicker',
                     ],
-                    'data_timezone' => $timezone,
+                    'model_timezone' => $timezone,
                 ]
             )
         );
