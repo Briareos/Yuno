@@ -3,6 +3,7 @@
 namespace Yuno\MainBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\Time;
 use Yuno\MainBundle\Click\Filter;
 use Yuno\MainBundle\Entity\CampaignGroupRepository;
 use Yuno\MainBundle\Form\CampaignGroupsType;
@@ -455,162 +456,95 @@ class CampaignController extends Controller
      */
     public function campaignClickAction(Campaign $campaign, Request $request)
     {
-        $form = $this->formFactory->createNamed(
-            '',
-            'form',
-            null,
-            [
-                'csrf_protection' => false,
-            ]
-        );
-        $form->add(
-            $this->formFactory->createNamed(
-                'campaignGroup',
-                'entity',
-                null,
-                [
-                    'label'         => "Banner group",
-                    'constraints'   => [
-                        new \Symfony\Component\Validator\Constraints\NotBlank(),
-                    ],
-                    'class'         => 'MainBundle:CampaignGroup',
-                    'query_builder' => function (CampaignGroupRepository $er) use ($campaign) {
-                        $qb = $er->createQueryBuilder('cg')
-                            ->where('cg.campaign = :campaign')
-                            ->setParameter('campaign', $campaign);
+        $form = $this->formFactory->createNamedBuilder('', 'form', null, [
+            'csrf_protection' => false,
+            'method'          => 'GET',
+        ]);
+        $form->add('campaignGroup', 'entity', [
+            'label'         => "Banner group",
+            'constraints'   => [
+                new \Symfony\Component\Validator\Constraints\NotBlank(),
+            ],
+            'class'         => 'MainBundle:CampaignGroup',
+            'query_builder' => function (CampaignGroupRepository $er) use ($campaign) {
+                $qb = $er->createQueryBuilder('cg')
+                    ->where('cg.campaign = :campaign')
+                    ->setParameter('campaign', $campaign);
 
-                        return $qb;
-                    },
-                    'property'      => 'bannerGroup.name'
-                ]
-            )
-        );
-        $form->add(
-            $this->formFactory->createNamed(
-                'time',
-                'text',
-                (new \DateTime('now', new \DateTimeZone($campaign->getTimezone())))->format('H:i:s'),
-                [
-                    'label'        => "Time",
-                    'required'     => false,
-                    'constraints'  => [
-                        new \Symfony\Component\Validator\Constraints\Time(),
-                    ],
-                    'widget_addon' => [
-                        'type' => 'append',
-                        'icon' => 'time'
-                    ],
-                    'attr'         => [
-                        'class' => 'timepicker input-mini',
-                    ],
-                    'help_block'   => sprintf("Click time in campaign's timezone (%s).", $campaign->getTimezone()),
-                ]
-            )
-        );
-        $formServer = $this->formFactory->createNamed(
-            'server',
-            'form',
-            null,
-            [
-                'show_legend'     => false,
-                'label_render'    => false,
-                'widget_controls' => false,
+                return $qb;
+            },
+            'property'      => 'bannerGroup.name'
+        ]);
+        $form->add('time', 'text', [
+            'data'         => (new \DateTime('now', new \DateTimeZone($campaign->getTimezone())))->format('H:i:s'),
+            'label'        => "Time",
+            'required'     => false,
+            'constraints'  => [
+                new Time(),
+            ],
+            'widget_addon' => [
+                'type' => 'append',
+                'icon' => 'time'
+            ],
+            'attr'         => [
+                'class' => 'timepicker input-mini',
+            ],
+            'help_block'   => sprintf("Click time in campaign's timezone (%s).", $campaign->getTimezone()),
+        ]);
+        $formServer = $this->formFactory->createNamedBuilder('server', 'form', [
+            'show_legend'     => false,
+            'label_render'    => false,
+            'widget_controls' => false,
+        ]);
+        $formServer->add('REMOTE_ADDR', 'text', [
+            'data'     => $request->server->get('REMOTE_ADDR'),
+            'label'    => 'IP address',
+            'required' => false,
+        ]);
+        $formServer->add('HTTP_USER_AGENT', 'textarea', [
+            'data'     => $request->server->get('HTTP_USER_AGENT'),
+            'label'    => 'User agent',
+            'required' => false,
+            'attr'     => [
+                'rows'  => 2,
+                'style' => 'white-space: pre',
+                'class' => 'input-xxlarge',
             ]
-        );
-        $formServer->add(
-            $this->formFactory->createNamed(
-                'REMOTE_ADDR',
-                'text',
-                $request->server->get('REMOTE_ADDR'),
-                [
-                    'label'    => 'IP address',
-                    'required' => false,
-                ]
-            )
-        );
-        $formServer->add(
-            $this->formFactory->createNamed(
-                'HTTP_USER_AGENT',
-                'textarea',
-                $request->server->get('HTTP_USER_AGENT'),
-                [
-                    'label'    => 'User agent',
-                    'required' => false,
-                    'attr'     => [
-                        'rows'  => 2,
-                        'style' => 'white-space: pre',
-                        'class' => 'input-xxlarge',
-                    ]
-                ]
-            )
-        );
-        $formServer->add(
-            $this->formFactory->createNamed(
-                'HTTP_REFERER',
-                'textarea',
-                null,
-                [
-                    'label'    => 'Referrer',
-                    'required' => false,
-                    'attr'     => [
-                        'rows'  => 2,
-                        'style' => 'white-space: pre',
-                        'class' => 'input-xxlarge',
-                    ],
-                ]
-            )
-        );
-        $formServer->add(
-            $this->formFactory->createNamed(
-                'GEOIP_CONTINENT_CODE',
-                'text',
-                null,
-                [
-                    'label'    => 'Continent code',
-                    'required' => false,
-                ]
-            )
-        );
-        $formServer->add(
-            $this->formFactory->createNamed(
-                'GEOIP_COUNTRY_CODE',
-                'text',
-                null,
-                [
-                    'label'    => 'Country code',
-                    'required' => false,
-                ]
-            )
-        );
-        $formServer->add(
-            $this->formFactory->createNamed(
-                'GEOIP_REGION',
-                'text',
-                null,
-                [
-                    'label'    => 'State/region',
-                    'required' => false,
-                ]
-            )
-        );
-        $formServer->add(
-            $this->formFactory->createNamed(
-                'GEOIP_CITY',
-                'text',
-                null,
-                [
-                    'label'    => 'City',
-                    'required' => false,
-                ]
-            )
-        );
+        ]);
+        $formServer->add('HTTP_REFERER', 'textarea', [
+            'label'    => 'Referrer',
+            'required' => false,
+            'attr'     => [
+                'rows'  => 2,
+                'style' => 'white-space: pre',
+                'class' => 'input-xxlarge',
+            ],
+        ]);
+        $formServer->add('GEOIP_CONTINENT_CODE', 'text', [
+            'label'    => 'Continent code',
+            'required' => false,
+        ]);
+        $formServer->add('GEOIP_COUNTRY_CODE', 'text', [
+            'label'    => 'Country code',
+            'required' => false,
+        ]);
+        $formServer->add('GEOIP_REGION', 'text', [
+            'label'    => 'State/region',
+            'required' => false,
+        ]);
+        $formServer->add('GEOIP_CITY', 'text', [
+            'label'    => 'City',
+            'required' => false,
+        ]);
         $form->add($formServer);
+
+        $form = $form->getForm();
 
         $status = null;
         $log    = null;
         $reason = null;
         if ($request->query->getInt('campaignGroup')) {
-            $form->bind($request);
+            $form->handleRequest($request);
             if ($form->isValid()) {
                 $data         = $form->getData();
                 $clickRequest = new Request();
@@ -645,30 +579,21 @@ class CampaignController extends Controller
             null,
             []
         );
-        $form->add(
-            $this->formFactory->createNamed(
-                'date',
-                'date',
-                new \DateTime('now'),
-                [
-                    'constraints'   => [
-                        new \Symfony\Component\Validator\Constraints\Date(),
-                    ],
-                    'by_reference'  => false,
-                    'attr'          => [
-                        'class' => 'datepicker',
-                    ],
-                    'model_timezone' => $timezone,
-                ]
-            )
+        $form->add('date', 'date', [
+                'data'           => new \DateTime(),
+                'constraints'    => [
+                    new \Symfony\Component\Validator\Constraints\Date(),
+                ],
+                'by_reference'   => false,
+                'attr'           => [
+                    'class' => 'datepicker',
+                ],
+                'model_timezone' => $timezone,
+            ]
         );
-        $form->add(
-            $this->formFactory->createNamed(
-                'filter',
-                'hidden',
-                1
-            )
-        );
+        $form->add('filter', 'hidden', [
+            'data' => 1,
+        ]);
 
         return $form;
     }
