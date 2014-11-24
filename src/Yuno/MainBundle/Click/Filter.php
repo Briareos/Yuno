@@ -248,7 +248,7 @@ class Filter
     private function isDuplicateIp()
     {
         $days      = 21;
-        $duplicate = $this->em->createQuery('SELECT c.id FROM MainBundle:Click c WHERE c.createdAt > :DATE AND c.ip = :ip')
+        $duplicate = $this->em->createQuery('SELECT c.id FROM MainBundle:Click c WHERE c.createdAt > :date AND c.ip = :ip')
             ->setMaxResults(1)
             ->setParameter('date', new \DateTime(sprintf('-%s days', $days)))
             ->setParameter('ip', $this->request->server->get('REMOTE_ADDR'))
@@ -265,7 +265,7 @@ class Filter
 
     private function isCampaignGroupQuotaReached()
     {
-        $count = $this->em->createQuery('SELECT Count(c.id) FROM MainBundle:Click c INNER JOIN c.banner b WHERE c.createdAt > :DATE AND c.blocked IS NULL AND b.group = :GROUP')
+        $count = $this->em->createQuery('SELECT Count(c.id) FROM MainBundle:Click c INNER JOIN c.banner b WHERE c.createdAt > :date AND c.blocked IS NULL AND b.group = :group')
             ->setParameter('date', $this->campaignGroup->getCampaign()->getPreviousMidnight())
             ->setParameter('group', $this->campaignGroup->getBannerGroup())
             ->getSingleScalarResult();
