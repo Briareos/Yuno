@@ -30,21 +30,13 @@ class CampaignGroupType extends AbstractType
                 if ($campaignGroup === null) {
                     return;
                 }
-                $banners        = $campaignGroup->getBanners();
-                $dispersionForm = $factory->createNamed('clickDispersion', 'form');
+                $banners = $campaignGroup->getBanners();
+                $form    = $event->getForm();
+                $form->add('clickDispersion', 'form');
+                $clickDispersion = $form->get('clickDispersion');
                 foreach ($banners as $banner) {
-                    $dispersionForm->add(
-                        $factory->createNamed(
-                            $banner->getId(),
-                            'text',
-                            null,
-                            [
-                                //'disabled' => !$banner->getSite()->getActive()
-                            ]
-                        )
-                    );
+                    $clickDispersion->add($banner->getId(), 'text');
                 }
-                $event->getForm()->add($dispersionForm);
             }
         );
     }
