@@ -5,6 +5,7 @@ namespace Yuno\MainBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Yuno\MainBundle\Entity\Campaign;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -65,41 +66,29 @@ class CityFilterType extends AbstractType
             ]
         );
 
-        $factory = $builder->getFormFactory();
-
-        $builder->addEventListener(
-            FormEvents::PRE_BIND,
-            function (FormEvent $event) use ($factory) {
-                $data = $event->getData();
-                if (empty($data)) {
-                    return;
-                }
-                $form        = $event->getForm();
-                $constraints = [];
-                if ($data['country'] === 'US' || $data['country'] === 'CA') {
-                    $constraints[] = new \Symfony\Component\Validator\Constraints\NotBlank();
-                }
-                $form->remove('region');
-                $form->add(
-                    $factory->createNamed(
-                        'region',
-                        'choice',
-                        null,
-                        [
-                            'constraints'          => $constraints,
-                            'choices'              => Campaign::getAvailableRegions(),
-                            'required'             => false,
-                            'label'                => "State/region list (only for United States and Canada)",
-                            'attr'                 => [
-                                'class'            => 'chosen',
-                                'data-placeholder' => "State/region",
-                            ],
-                            'widget_prefix'        => "State/region (US/CA only)",
-                            'widget_control_group' => false,
-                        ]
-                    )
-                );
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+            if (empty($data)) {
+                return;
             }
-        );
+            $form        = $event->getForm();
+            $constraints = [];
+            if ($data['country'] === 'US' || $data['country'] === 'CA') {
+                $constraints[] = new NotBlank();
+            }
+            $form->remove('region');
+            $form->add('region', 'choice', [
+                'constraints'          => $constraints,
+                'choices'              => Campaign::getAvailableRegions(),
+                'required'             => false,
+                'label'                => "State/region list (only for United States and Canada)",
+                'attr'                 => [
+                    'class'            => 'chosen',
+                    'data-placeholder' => "State/region",
+                ],
+                'widget_prefix'        => "State/region (US/CA only)",
+                'widget_control_group' => false,
+            ]);
+        });
     }
 }

@@ -58,43 +58,31 @@ class ReferrerMatcherType extends AbstractType
             ]
         );
 
-        $factory = $builder->getFormFactory();
-
-        $builder->addEventListener(
-            FormEvents::PRE_BIND,
-            function (FormEvent $event) use ($factory) {
-                $data = $event->getData();
-                if (empty($data)) {
-                    return;
-                }
-                $form          = $event->getForm();
-                $constraints   = [];
-                $constraints[] = new \Symfony\Component\Validator\Constraints\NotBlank();
-                if ($data['type'] === 'regex') {
-                    $constraints[] = new \Yuno\MainBundle\Validator\Constraints\IsRegex();
-                }
-                $form->remove('pattern');
-                $form->add(
-                    $factory->createNamed(
-                        'pattern',
-                        'text',
-                        null,
-                        [
-                            'constraints'          => $constraints,
-                            'widget_addon'         => [
-                                'type' => 'append',
-                                'icon' => 'filter'
-                            ],
-                            'attr'                 => [
-                                'class' => '',
-                            ],
-                            'widget_controls'      => false,
-                            'widget_control_group' => false,
-                        ]
-                    )
-                );
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+            if (empty($data)) {
+                return;
             }
-        );
+            $form          = $event->getForm();
+            $constraints   = [];
+            $constraints[] = new \Symfony\Component\Validator\Constraints\NotBlank();
+            if ($data['type'] === 'regex') {
+                $constraints[] = new \Yuno\MainBundle\Validator\Constraints\IsRegex();
+            }
+            $form->remove('pattern');
+            $form->add('pattern', 'text', [
+                'constraints'          => $constraints,
+                'widget_addon'         => [
+                    'type' => 'append',
+                    'icon' => 'filter'
+                ],
+                'attr'                 => [
+                    'class' => '',
+                ],
+                'widget_controls'      => false,
+                'widget_control_group' => false,
+            ]);
+        });
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
