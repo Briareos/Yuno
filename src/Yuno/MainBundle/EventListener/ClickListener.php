@@ -104,7 +104,7 @@ class ClickListener
         }
 
         $blacklisted = false;
-        foreach (['msn', 'yahoo', 'bing'] as $blacklist) {
+        foreach (['msn', 'yahoo', 'bing', 'google'] as $blacklist) {
             if ($request->server->get('HTTP_USER_AGENT') && stripos($request->server->get('HTTP_USER_AGENT'), $blacklist)) {
                 $blacklisted = true;
                 break;
